@@ -1,0 +1,721 @@
+﻿sheet,id,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12,Q13,Degree,Gender
+Before_lectures_001,1,5,5,4,2,1,1,1,1,5,5,5,NA,NA,Marine Biology,Woman
+Before_lectures_001,2,5,4,5,5,4,1,1,1,5,5,5,NA,NA,Zoology,Girl
+Before_lectures_001,3,5,4,4,3,1,2,3,1,5,1,1,NA,NA,Applied terrestrial and marine ecology,non-binary
+Before_lectures_001,4,5,4,4,3,1,2,3,2,5,1,1,NA,NA,Applied terrestrial and marine ecology,Woman
+Before_lectures_001,5,4,4,4,3,1,2,2,2,5,1,3,NA,NA,Marine Biology and Zoology,non-binary
+Before_lectures_001,6,4,4,4,3,2,2,2,2,5,2,2,NA,NA,Marine Biology and Zoology,female
+Before_lectures_001,7,4,4,3,2,1,2,4,4,4,2,2,NA,NA,Marine Biology,female
+Before_lectures_001,8,4,4,3,2,1,5,5,5,5,1,2,NA,NA,Marine Biology,male
+Before_lectures_001,9,5,4,4,3,2,2,3,1,4,2,2,NA,NA,Zoology with animal management,female
+Before_lectures_001,10,4,4,5,3,4,1,1,1,5,5,4,NA,NA,Biology,man
+Before_lectures_001,11,4,4,3,2,1,2,2,3,4,1,1,NA,NA,Zoology with marine zoology,male
+Before_lectures_001,12,4,4,3,3,1,3,3,3,4,3,2,NA,NA,Marine Biology and Zoology,female
+Before_lectures_001,13,4,4,4,3,3,2,2,2,4,3,3,NA,NA,Applied terrestrial and marine ecology,male
+Before_lectures_001,14,5,5,5,5,2,1,1,1,5,1,1,NA,NA,Applied terrestrial and marine ecology,male
+Before_lectures_001,15,4,4,3,3,2,2,2,2,4,2,3,NA,NA,Marine Biology,female
+Before_lectures_001,16,5,5,5,4,5,1,1,1,5,4,3,NA,NA,Zoology with conservation,male
+Before_lectures_001,17,4,4,3,4,2,1,1,1,4,2,2,NA,NA,Zoology,NA
+Before_lectures_001,18,3,4,3,3,1,3,1,3,5,3,2,NA,NA,Zoology,female
+Before_lectures_001,19,4,4,4,4,2,2,3,3,5,2,3,NA,NA,Zoology with conservation,male
+Before_lectures_001,20,4,4,4,3,2,3,3,3,4,1,2,NA,NA,Zoology,female
+Before_lectures_001,21,5,5,5,3,3,1,1,1,5,3,3,NA,NA,Zoology with herp,female
+Before_lectures_001,22,5,5,5,2,2,2,3,2,4,3,3,NA,NA,Marine Biology,female
+Before_lectures_001,23,5,5,4,3,2,1,2,1,5,2,2,NA,NA,Marine Biology and Zoology,female
+Before_lectures_001,24,5,5,4,3,3,2,2,2,5,1,1,NA,NA,Biology,Woman
+Before_lectures_001,25,4,4,4,3,2,1,1,2,5,2,2,NA,NA,Zoology,male
+Before_lectures_001,26,5,4,3,4,1,2,3,1,5,2,2,NA,NA,Marine Biology,Awesome
+Before_lectures_001,27,4,4,4,3,2,3,3,3,4,2,2,NA,NA,Zoology with animal management,female
+Before_lectures_002,1,4,5,3,2,2,1,1,1,5,3,3,NA,NA,Marine Biology,female
+Before_lectures_002,2,4,4,4,3,2,2,1,2,5,3,2,NA,NA,Marine Biology,female
+Before_lectures_002,3,4,3,3,2,1,2,4,3,4,1,1,NA,NA,Zoology,male
+Before_lectures_002,4,4,4,2,3,1,2,2,4,4,2,2,NA,NA,Marine Biology and oceanography,male
+Before_lectures_002,5,3,4,3,3,1,3,2,3,5,4,2,NA,NA,Marine Biology and oceanography,male
+Before_lectures_002,6,5,5,5,4,3,1,1,1,5,3,3,NA,NA,Zoology with conservation,male
+Before_lectures_002,7,4,4,4,4,2,3,3,5,5,2,2,NA,NA,Zoology with conservation,female
+Before_lectures_002,8,4,3,3,4,1,5,4,3,5,2,2,NA,NA,Zoology with conservation,female
+Before_lectures_002,9,4,3,3,4,2,3,3,2,4,2,1,NA,NA,Zoology with conservation,NA
+Before_lectures_002,10,5,5,4,4,1,5,5,3,5,1,1,NA,NA,Zoology with conservation,NA
+Before_lectures_002,11,5,5,5,4,2,2,2,3,5,2,2,NA,NA,Zoology with conservation,female
+Before_lectures_002,12,5,5,4,4,3,NA,4,3,5,2,2,NA,NA,Zoology with conservation,female
+Before_lectures_002,13,5,4,5,3,1,4,3,3,4,1,1,NA,NA,Marine Biology,female
+Before_lectures_002,14,4,4,3,3,2,3,3,3,4,2,2,NA,NA,Zoology with animal behav,
+Before_lectures_002,15,3,4,3,2,1,3,2,3,4,3,3,NA,NA,Zoology with animal management,female
+Before_lectures_002,16,4,3,4,3,2,2,2,1,5,3,2,NA,NA,Zoology with animal management,male
+Before_lectures_002,17,5,5,5,3,1,4,4,3,4,2,3,NA,NA,Marine Biology,female
+Before_lectures_002,18,5,5,5,3,2,3,5,1,4,3,4,NA,NA,Marine Biology and oceanography,demigirl
+Before_lectures_002,19,5,5,4,3,2,3,2,3,4,4,1,NA,NA,Marine Biology,female
+Before_lectures_002,20,5,5,5,5,3,2,2,1,5,2,2,NA,NA,Zoology with conservation,demigirl
+Before_lectures_002,21,5,5,4,3,2,1,1,1,5,5,2,NA,NA,Marine Biology,female
+Before_lectures_002,22,5,5,5,4,3,1,1,1,5,5,3,NA,NA,Marine Biology,female
+Before_lectures_002,23,5,4,5,2,1,4,1,3,4,3,3,NA,NA,Zoology with herp,female
+Before_lectures_002,24,5,4,4,3,3,3,1,2,5,1,2,NA,NA,Zoology with herp,female
+Before_lectures_002,25,4,4,4,3,3,3,4,2,5,3,2,NA,NA,Applied terrestrial and marine ecology,male
+Before_lectures_002,26,4,4,4,4,2,3,3,3,5,2,3,NA,NA,Marine Biology and oceanography,male
+Before_lectures_002,27,4,4,5,1,2,2,1,2,3,2,2,NA,NA,Marine Biology,female
+Before_lectures_002,28,NA,3,3,2,1,3,2,3,4,3,2,NA,NA,Marine Biology,female
+Before_lectures_002,29,4,3,4,3,2,2,3,1,5,2,3,NA,NA,Marine Biology,female
+Before_lectures_002,30,4,3,4,3,2,2,2,2,4,2,2,NA,NA,Marine Biology,male
+Before_lectures_002,31,4,4,3,4,3,1,1,1,5,3.5,4,NA,NA,Zoology with marine zoology,male
+Before_lectures_002,32,5,5,5,5,3,1,2,5,5,3,3,NA,NA,Zoology with animal behav,
+Before_lectures_002,33,3,3,2,2,1,1,2,1,5,3,1,NA,NA,Marine vertebrate conservation,male
+Before_lectures_002,34,4,4,5,4,3,2,2,3,5,3,4,NA,NA,Zoology with marine zoology,female
+Before_lectures_002,35,4,4,3,2,2,3,1,1,4,2,2,NA,NA,Marine vertebrate conservation,male
+Before_lectures_002,36,5,5,5,5,2,1,1,1,5,2,3,NA,NA,Zoology with conservation,male
+Before_lectures_002,37,5,4,4,4,3,2,2,2,4,1,1,NA,NA,Zoology,male
+Before_lectures_002,38,4,5,4,4,2,3,3,2,4,2,4,NA,NA,Zoology with animal behav,male
+Before_lectures_002,39,4,4,3,3,4,1,1,1,5,5,5,NA,NA,Zoology with ornithology,male
+Before_lectures_002,40,3,3,4,4,2,2,2,3,4,2,2,NA,NA,Zoology with herp,female
+Before_lectures_002,41,5,4,3,2,1,3,4,2,5,4,1,NA,NA,Biology with biotech,female
+Before_lectures_002,42,5,5,5,3,4,1,1,1,5,2,5,NA,NA,Biology with biotech,male
+Before_lectures_003,1,4,4,4,4,2,2,5,2,4,2,2,NA,NA,Marine Biology and oceanography,female
+Before_lectures_003,2,4,4,4,3,2,1,1,2,4,3,2,NA,NA,Zoology with marine zoology,male
+Before_lectures_003,3,5,5,5,4,4,1,1,1,5,4,4,NA,NA,Biology,male
+Before_lectures_003,4,4,5,5,4,3,1,1,1,5,5,4,NA,NA,Zoology with marine zoology,female
+Before_lectures_003,5,5,5,4,3,1,4,4,2,5,2,2,NA,NA,Zoology with marine zoology,female
+Before_lectures_003,6,5,5,5,4,2,1,1,1,5,3,2,NA,NA,Zoology,female
+Before_lectures_003,7,5,4,3,3,2,3,2,3,3,2,2,NA,NA,Zoology with herp,female
+Before_lectures_003,8,5,5,4,4,2,1,2,2,5,3,3,NA,NA,Marine Biology,male
+Before_lectures_003,9,5,5,5,3,1,3,4,4,4,3,2,NA,NA,Marine Biology and Zoology,
+Before_lectures_003,10,5,5,4,3,1,4,4,4,NA,1,1,NA,NA,Zoology,female
+Before_lectures_003,11,4,5,4,3,1,1,1,5,NA,2,3,NA,NA,Marine Biology,female
+Before_lectures_003,12,4,4,4,4,3,3,NA,2,4,1,1,NA,NA,Wildlife conservation,female
+Before_lectures_003,13,5,4,3,3,1,2,3,1,5,2,2,NA,NA,Marine Biology,male
+Before_lectures_003,14,4,4,3,3,1,2,5,3,5,4,2,NA,NA,Wildlife conservation,Gender queer
+Before_lectures_003,15,5,4,3,3,1,1,1,1,4,2,2,NA,NA,Marine vertebrate conservation,female
+Before_lectures_003,16,5,5,5,5,1,4,4,4,4,1,1,NA,NA,Marine Biology,female
+Before_lectures_003,17,5,5,4,4,1,1,1,1,5,3,2,NA,NA,Zoology with animal behav,female
+Before_lectures_003,18,5,5,4,4,2,1,1,1,5,3,3,NA,NA,Zoology with herp,
+Before_lectures_003,19,5,5,5,4,3,2,3,2,5,3,3,NA,NA,Zoology,male
+Before_lectures_003,20,5,4,5,3,2,1,1,1,5,2,2,NA,NA,Wildlife conservation,man
+Before_lectures_003,21,5,5,4,3,3,2,2,1,4,2,2,NA,NA,Biology,male
+Before_lectures_003,22,5,4,4,4,3,2,2,1,5,2,1,NA,NA,Zoology,male
+Before_lectures_003,23,4,3,3,2,1,2,2,4,3,1,3,NA,NA,Applied terrestrial and marine ecology,female
+Before_lectures_003,24,5,5,4,3,3,1,1,1,5,2,2,NA,NA,Applied terrestrial and marine ecology,female
+Before_lectures_003,25,4,3,4,2,1,3,4,2,4,2,2,NA,NA,Marine Biology and oceanography,female
+Before_lectures_003,26,4,4,3,2,1,4,4,3,4,1,3,NA,NA,Marine Biology and oceanography,female
+Before_lectures_003,27,5,5,5,4,2,1,1,1,5,1,2,NA,NA,Marine Biology and oceanography,non-binary
+Before_lectures_003,28,5,5,3,3,2,1,1,1,5,1,2,NA,NA,Marine Biology and Zoology,female
+Before_lectures_003,29,4,3,3,2,1,4,3,4,3,2,2,NA,NA,Zoology with animal behav,female
+Before_lectures_003,30,4,4,4,3,2,3,1,2,5,1,2,NA,NA,Zoology with herp,male
+Before_lectures_003,31,5,4,4,3,2,2,3,2,5,3,3,NA,NA,Zoology with primatology,male
+Before_lectures_004,1,NA,2,4,2,3,2,4,2,4,4,1,NA,NA,Zoology with primatology,male
+Before_lectures_004,2,5,4,4,3,1,3,3,2,5,1,2,NA,NA,Zoology with ornithology,male
+Before_lectures_004,3,4,4,4,3,1,3,2,2,5,4,3,NA,NA,Zoology with herp,male
+Before_lectures_004,4,4,4,4,3,1,4,3,4,4,1,2,NA,NA,Marine Biology,male
+Before_lectures_004,5,4,4,3,3,2,2,2,2,4,2,2,NA,NA,Marine Biology,female
+Before_lectures_004,6,5,4,4,3,3,2,2,1,5,2,2,NA,NA,Zoology,male
+Before_lectures_004,7,5,5,4,3,3,1,2,1,5,2,2,NA,NA,Biology,female
+Before_lectures_004,8,4,4,3,2,1,3,3,4,3,1,1,NA,NA,Zoology,female
+Before_lectures_004,9,3,4,4,3,1,2,2,1,5,2,2,NA,NA,Marine Biology and Zoology,non-binary
+Before_lectures_004,10,4,5,4,3,3,2,4,2,5,3,2,NA,NA,Zoology with conservation,female
+Before_lectures_004,11,5,5,4,3,2,3,2,3,4,2,3,NA,NA,Marine Biology and oceanography,female
+Before_lectures_004,12,4,3,5,2,2,2,3,1,5,4,2,NA,NA,Zoology,female
+Before_lectures_004,13,4,4,4,2,1,2,1,3,4,1,1,NA,NA,Marine Biology,female
+Before_lectures_004,14,3,3,2,2,1,1,1,2,5,3,2,NA,NA,Marine vertebrate conservation,male
+Before_lectures_004,15,4,4,4,3,2,1,1,1,5,3,2,NA,NA,Zoology with marine zoology,male
+Before_lectures_004,16,4,4,3,3,3,2,3,2,4,3,2,NA,NA,Wildlife conservation,female
+Before_lectures_004,17,5,5,4,4,1,1,3,2,5,1,1,NA,NA,Zoology,female
+Before_lectures_004,18,4,4,3,3,3,2,2,2,4,1,1,NA,NA,Wildlife conservation,female
+Before_lectures_004,19,4,4,4,4,1,1,1,2,5,1,1,NA,NA,Zoology with herp,male
+Before_lectures_004,20,3,3,4,4,2,2,1,1,5,2,2,NA,NA,Marine Biology and oceanography,female
+Before_lectures_004,21,4,3,3,2,1,1,1,1,5,2,2,NA,NA,Marine Biology,female
+Before_lectures_004,22,5,5,3,3,1,2,1,1,4,1,2,NA,NA,Marine Biology,female
+Before_lectures_004,23,5,5,4,4,3,1,2,2,5,3,4,NA,NA,Marine Biology,female
+Before_lectures_004,24,4,4,3,2,1,2,1,1,5,2,1,NA,NA,Marine Biology and oceanography,female
+Before_lectures_004,25,4,4,4,4,2,4,3,3,5,4,3,NA,NA,Marine Biology and Zoology,female
+Before_lectures_004,26,4,4,3,3,1,2,3,2,4,4,4,NA,NA,Zoology with herp,male
+Before_lectures_004,27,4,4,4,3,2,1,2,1,5,2,1,NA,NA,Zoology,male
+Before_lectures_004,28,4,5,5,5,4,1,1,1,5,4,3,NA,NA,Zoology,female
+Before_lectures_004,29,4,3,3,3,3,2,2,2,5,2,2,NA,NA,Zoology,female
+Before_lectures_004,30,5,5,5,3,3,1,1,1,5,3,3,NA,NA,Wildlife conservation,NA
+Before_lectures_004,31,4,4,4,3,3,1,1,1,5,4,3,NA,NA,Zoology with animal behav,non-binary
+Before_lectures_004,32,5,4,4,4,1,2,1,2,5,1,3,NA,NA,Zoology with herp,Woman
+Before_lectures_004,33,4,4,4,3,1,3,1,4,4,3,3,NA,NA,Zoology with primatology,female
+Before_lectures_004,34,4,4,3,2,3,3,3,3,4,3,2,NA,NA,Wildlife conservation,female
+Before_lectures_004,35,4,4,4,3,1,1,1,1,5,4,4,NA,NA,Wildlife conservation,male
+Before_lectures_004,36,3,4,2,1,1,1,1,2,4,3,2,NA,NA,Marine vertebrate conservation,female
+Before_lectures_004,37,4,4,3,2,1,1,1,1,5,3,3,NA,NA,Marine Biology,female
+Before_lectures_004,38,4,4,3,3,1,3,3,2,4,2,2,NA,NA,Marine Biology,female
+Before_lectures_004,39,4,3,4,2,1,2,2,2,5,1,1,NA,NA,Marine Biology,female
+Before_lectures_004,40,4,4,5,5,5,1,5,1,5,NA,NA,NA,NA,Marine Biology and oceanography,cat
+Before_lectures_005,1,4,4,3,3,2,2,3,3,5,1,3,NA,NA,Zoology with marine zoology,female
+Before_lectures_005,2,4,4,3,3,3,2,1,1,4,1,3,NA,NA,Marine Biology,male
+Before_lectures_005,3,5,5,4,3,2,2,2,1,5,3,4,NA,NA,Zoology with conservation,male
+Before_lectures_005,4,5,4,4,3,2,2,2,1,5,3,4,NA,NA,Marine Biology,male
+Before_lectures_005,5,4,4,5,3,3,1,1,1,4,3,3,NA,NA,Zoology,female
+Before_lectures_005,6,4,4,4,4,2,1,1,1,5,3,3,NA,NA,Marine Biology,female
+Before_lectures_005,7,3,4,2,1,1,2,1,1,4,3,1,NA,NA,Marine Biology and oceanography,man
+Before_lectures_005,8,4,4,4,4,3,3,3,2,1,3,2,NA,NA,Marine Biology,NA
+Before_lectures_005,9,4,4,3,2,2,3,3,3,4,2,2,NA,NA,Marine Biology,male
+Before_lectures_005,10,5,5,5,5,2,1,2,1,5,2,2,NA,NA,Zoology,boy
+Before_lectures_005,11,4,5,4,3,3,2,4,3,4,3,1,NA,NA,Wildlife conservation,male
+Before_lectures_005,12,5,4,4,4,2,1,1,1,5,2,3,NA,NA,Wildlife conservation,female
+Before_lectures_005,13,5,4,4,3,3,1,1,1,5,3,1,NA,NA,Applied terrestrial and marine ecology,NA
+Before_lectures_005,14,5,4,4,3,2,1,2,1,5,3,2,NA,NA,Zoology with ornithology,female
+Before_lectures_005,15,3,3,4,4,3,2,2,3,4,2,2,NA,NA,Biology with biotech,male
+Before_lectures_005,16,5,5,5,5,2,2,1,2,5,4,4,NA,NA,Zoology,male
+Before_lectures_005,17,4,4,3,2,1,1,1,2,5,2,3,NA,NA,Marine Biology,female
+Before_lectures_005,18,3,3,3,2,1,3,1,4,4,2,3,NA,NA,Biology with biotech,male
+Before_lectures_005,19,5,5,5,4,3,1,1,1,5,4,4,NA,NA,Biology,male
+Before_lectures_005,20,4,4,2,1,1,2,1,1,5,3,3,NA,NA,Marine Biology,male
+Before_lectures_005,21,5,4,3,2,1,2,2,2,4,3,3,NA,NA,Marine vertebrate conservation,Woman
+Before_lectures_005,22,5,5,5,5,2,1,1,1,5,5,5,NA,NA,Zoology with herp,bisexual
+Before_lectures_005,23,5,5,5,4,2,1,1,1,5,1,2,NA,NA,Zoology with herp,man
+Before_lectures_005,24,5,5,5,4,4,1,1,1,5,4,4,NA,NA,Zoology with conservation,male
+Before_lectures_005,25,5,5,4,4,2,1,1,1,5,3,4,NA,NA,Marine Biology,gender fluid
+Before_lectures_005,26,5,4,4,3,1,3,3,3,5,2,4,NA,NA,Marine Biology and Zoology,female
+Before_lectures_005,27,5,4,3,3,2,3,3,3,4,2,2,NA,NA,Marine Biology,male
+Before_lectures_005,28,4,4,4,2,2,1,2,2,5,2,1,NA,NA,Wildlife conservation,female
+Before_lectures_005,29,4,4,4,2,1,3,3,3,4,2,2,NA,NA,Wildlife conservation,female
+Before_lectures_005,30,4,4,3,2,2,1,1,2,5,2,2,NA,NA,Marine vertebrate conservation,Woman
+Before_lectures_005,31,5,4,5,3,2,2,3,2,5,2,2,NA,NA,Marine Biology,female
+Before_lectures_005,32,5,5,5,5,5,1,1,1,5,3,4,NA,NA,Zoology with herp,male
+Before_lectures_006,1,4,4,4,4,2,3,2,3,4,2,3,NA,NA,Zoology with herp,NA
+Before_lectures_006,2,4,3,4,3,1,3,NA,4,5,2,1,NA,NA,Zoology with primatology,male
+Before_lectures_006,3,5,5,4,3,3,1,2,2,5,3,3,NA,NA,Zoology with ornithology,female
+Before_lectures_006,4,4,4,3,2,2,1,1,2,5,3,3,NA,NA,Biology,female
+Before_lectures_006,5,4,4,3,2,1,3,1,4,4,3,2,NA,NA,Biology,female
+Before_lectures_006,6,4,4,3,3,2,1,1,1,4,3,3,NA,NA,Biology,female
+Before_lectures_006,7,4,4,3,2,1,1,1,1,5,3,2,NA,NA,Wildlife conservation,female
+Before_lectures_006,8,5,3,5,4,2,2,2,2,5,2,2,NA,NA,Marine Biology and Zoology,female
+Before_lectures_006,9,4,4,4,3,3,2,2,2,5,2,2,NA,NA,Zoology,male
+Before_lectures_006,10,5,5,5,4,3,1,1,1,5,NA,2,NA,NA,wildlife conservation and zoology,all of them
+Before_lectures_006,11,4,5,4,3,2,2,3,2,5,3,3,NA,NA,Marine Biology,male
+Before_lectures_006,12,5,5,5,4,3,1,1,1,5,3,3,NA,NA,Marine Biology and Zoology,female
+Before_lectures_006,13,5,5,4,4,2,4,4,1,4,2,2,NA,NA,Zoology with herp,female
+Before_lectures_006,14,5,5,5,4,1,1,1,3,4,2,2,NA,NA,Zoology with conservation,female
+Before_lectures_006,15,4,4,4,3,3,1,1,1,4,2,1,NA,NA,Zoology,female
+Before_lectures_006,16,4,4,5,3,2,2,2,2,4,2,2,NA,NA,Zoology with animal behav,male
+Before_lectures_006,17,5,5,5,5,5,1,2,1,5,3,2,NA,NA,Zoology,female
+Before_lectures_006,18,3,2,4,2,2,4,4,3,4,2,2,NA,NA,Zoology with marine zoology,female
+Before_lectures_006,19,5,5,5,5,3,3,3,1,5,3,2,NA,NA,Zoology,male
+Before_lectures_006,20,4,4,4,4,2,1,2,2,5,2,3,NA,NA,Zoology with marine zoology,female
+Before_lectures_006,21,5,5,3,3,3,4,4,3,4,3,3,NA,NA,Marine Biology and Zoology,female
+Before_lectures_006,22,5,5,4,2,1,3,2,3,4,1,1,NA,NA,Zoology with marine zoology,female
+Before_lectures_006,23,5,5,5,4,2,2,2,2,5,2,1,NA,NA,Zoology with conservation,female
+Before_lectures_006,24,4,4,4,3.5,2,2,2,2,5,2,2,NA,NA,Zoology with conservation,female
+Before_lectures_006,25,4,4,2,2,1,2,3,2,5,3,1,NA,NA,Marine Biology and oceanography,Woman
+Before_lectures_006,26,4,4,3,3,1,2,2,2,4,3,3,NA,NA,Marine vertebrate conservation,female
+Before_lectures_007,1,4,3,4,3,2,1,2,1,4,2,2,NA,NA,Zoology with animal behav,gender fluid
+Before_lectures_007,2,4,4,4,3,2,1,1,1,5,3,3,NA,NA,Zoology with primatology,male
+Before_lectures_007,3,3,4,4,4,2,3,1,3,5,3,4,NA,NA,Zoology,female
+Before_lectures_007,4,4,4,4,3,1,3,2,2,5,1,3,NA,NA,Zoology with primatology,female
+Before_lectures_007,5,4,4,5,5,5,1,1,1,5,3,2,NA,NA,Zoology with herp,female
+Before_lectures_007,6,4,5,4,3,2,3,2,3,5,1,1,NA,NA,Marine Biology and Zoology,male
+Before_lectures_007,7,4,3,4,3,2,3,2,3,5,3,4,NA,NA,NA,NA
+Before_lectures_007,8,5,5,3,3,1,2,2,2,3,2,2,NA,NA,Marine Biology,female
+Before_lectures_007,9,4,4,3,3,2,1,1,1,5,1,3,NA,NA,Marine Biology,non-binary
+Before_lectures_007,10,4,3,4,2,1,4,3,5,NA,4,4,NA,NA,Zoology,female
+Before_lectures_007,11,4,3,4,2,1,4,4,3,5,2,2,NA,NA,Marine Biology,Woman
+Before_lectures_007,12,5,4,5,3,2,2,2,1,5,3,3,NA,NA,Zoology,female
+Before_lectures_007,13,3,3,3,3,3,4,5,2,3,1,1,NA,NA,Marine Biology and oceanography,non-binary female
+Before_lectures_007,14,5,5,5,3,2,2,2,2,5,2,2,NA,NA,Zoology,female
+Before_lectures_007,15,4,3,3,3,2,1,1,2,4,4,4,NA,NA,Marine Biology,male
+Before_lectures_007,16,4,4,5,4,3,1,1,2,5,4,2,NA,NA,Zoology with marine zoology,female
+Before_lectures_007,17,5,4,5,4,3,2,2,1,5,3,2,NA,NA,Zoology with herp,male
+Before_lectures_007,18,4,5,5,4,3,1,2,1,5,3,3,NA,NA,Zoology with animal management,female
+Before_lectures_007,19,4,4,3,2,1,1,1,2,5,1,1,NA,NA,Marine Biology,female
+Before_lectures_007,20,4,4,4,4,1,4,2,2,5,2,3,NA,NA,Marine Biology,male
+Before_lectures_007,21,5,5,5,4,3,1,1,1,5,4,3,NA,NA,Zoology,male
+Before_lectures_007,22,4,4,4,3,2,3,3,2,4,2,4,NA,NA,Zoology,female
+Before_lectures_007,23,3,3,2,1,1,4,3,2,5,2,1,NA,NA,Zoology,female
+Before_lectures_007,24,5,5,5,1,1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+Before_lectures_007,25,4,4,4,3,2,1,1,1,4,2,3,NA,NA,NA,NA
+Before_lectures_008,1,4,4,4,3,2.5,2,2,2,4,3,2,NA,NA,Wildlife conservation,male
+Before_lectures_008,2,5,4,4,3,3,2,3,3,5,2,2,NA,NA,NA,NA
+Before_lectures_008,3,5,5,5,4,2,1,2,1,5,4,3,NA,NA,Zoology with ornithology,NA
+Before_lectures_008,4,5,5,5,4,3,1,2,1,5,2,2,NA,NA,Zoology with ornithology,female
+Before_lectures_008,5,4,3,2,2,1,3,3,2,4,2,2,NA,NA,Zoology,female
+Before_lectures_008,6,4,4,4,2,1,3,3,3,4,2,2,NA,NA,Biology,female
+Before_lectures_008,7,4,3,4,2,2,1,1,2,5,2,2,NA,NA,Zoology with herp,male
+Before_lectures_008,8,5,4,5,3,4,1,1,1,5,4,3,NA,NA,Zoology with herp,male
+Before_lectures_008,9,4,4,3,3,3,2,2,2,3,3,2,NA,NA,Biology,male
+Before_lectures_008,10,4,4,4,3,3,2,1,2,4,3,3,NA,NA,Zoology,female
+Before_lectures_008,11,4,5,4,3,1,1,1,1,5,3,4,NA,NA,Zoology with conservation,female
+Before_lectures_008,12,5,5,5,3,4,1,1,1,5,2,2,NA,NA,Zoology with animal behav,female
+Before_lectures_008,13,3,4,3,3,2,2,1,2,5,2,3,NA,NA,Marine Biology,female
+Before_lectures_008,14,3,3,2,2,1,4,3,3,4,3,2,NA,NA,Marine Biology and oceanography,female
+Before_lectures_008,15,4,4,3,3,2,1,1,1,5,4,4,NA,NA,Marine Biology,male
+Before_lectures_008,16,4,3,3,2,1,1,1,1,5,4,4,NA,NA,Zoology with herp,female
+Before_lectures_008,17,3,3,2,2,1,3,3,3,4,1,1,NA,NA,Marine Biology,female
+Before_lectures_008,18,4,4,3,3,5,1,1,1,5,3,3,NA,NA,Zoology,male
+Before_lectures_008,19,5,4,4,2,1,2,3,2,5,2,2,NA,NA,Zoology,male (trans)
+Before_lectures_008,20,4,4,5,3,3,2,4,2,5,4,2,NA,NA,Marine Biology,male
+Before_lectures_008,21,4,2,3,4,1,2,5,1,5,2,1,NA,NA,Marine Biology,homosexual
+Before_lectures_008,22,5,4,5,4,3,1,1,1,5,4,3,NA,NA,Marine Biology,bacon frazzle
+Before_lectures_008,23,4,5,4,3,2,1,1,1,4,3,3,NA,NA,Zoology,male
+Before_lectures_008,24,4,4,4,2,2,2,1,2,5,2,4,NA,NA,Marine Biology,female
+Before_lectures_008,25,4,5,4,3,1,3,2,5,5,4,3,NA,NA,Marine Biology,female
+Before_lectures_008,26,1,1,1,1,1,5,5,5,1,1,1,NA,NA,Zoology,male
+Before_lectures_008,27,4,4,4,3,2,4,4,3,5,1,1,NA,NA,Marine Biology,male
+Before_lectures_008,28,4,5,4,3,1,1,2,1,5,3,3,NA,NA,Zoology,female
+Before_lectures_008,29,5,5,5,5,1,1,1,1,5,4,4,NA,NA,Zoology with herp,male
+After_lectures_001,1,3,3,4,4,2,1,1,3,5,3,4,NA,NA,Zoology with herp,female
+After_lectures_001,2,4,4,3,3,4,1,1,1,5,4,4,NA,NA,Zoology with ornithology,male
+After_lectures_001,3,3,3,3,2,2,3,2,3,4,3,3,NA,NA,Marine Biology,female
+After_lectures_001,4,5,5,5,4,3,2,2,1,5,2,2,NA,NA,Biology,female
+After_lectures_001,5,5,4,3,3,3,1,1,2,4,3,2,NA,NA,Biology,female
+After_lectures_001,6,5,4,4,2,2,1,1,1,5,3,4,NA,NA,Zoology with ornithology,gender fluid
+After_lectures_001,7,4,5,4,3,4,1,3,1,5,3,4,NA,NA,Zoology with conservation,female
+After_lectures_001,8,5,5,5,5,4,1,2,1,5,2,3,NA,NA,Biology,female
+After_lectures_001,9,3,4,3,2,1,1,1,2,5,2.5,3,NA,NA,Marine Biology,female
+After_lectures_001,10,3,4,3,2,1,3,2,2,4,3,3,NA,NA,Marine Biology,female
+After_lectures_001,11,3,3,2,2,2,3,2,2,4,3,3,NA,NA,NA,NA
+After_lectures_001,12,3,3,2,2,2,2,2,2,4,2,4,NA,NA,NA,NA
+After_lectures_001,13,5,5,4,2,1,2,2,2,5,1,3,NA,NA,Marine Biology,female
+After_lectures_001,14,4,4,2,2,1,4,4,3,5,4,5,NA,NA,Zoology,female
+After_lectures_001,15,4,4,4,4,1,4,4,3,4,4,4,NA,NA,Marine Biology,Woman
+After_lectures_001,16,5,5,5,3,3,1,1,1,5,3,4,NA,NA,Zoology,female
+After_lectures_001,17,5,NA,4,4,2,1,1,1,5,4,5,NA,NA,Marine Biology and Zoology,female
+After_lectures_001,18,4,3,4,2,2,4,4,3,5,4,3,NA,NA,Zoology,female
+After_lectures_001,19,4,4,4,4,2,1,1,1,5,3,4,NA,NA,Zoology with herp,male
+After_lectures_001,20,5,5,5,4,3,3,2,2,5,3,4,NA,NA,Zoology,male
+After_lectures_001,21,3,4,4,3,3,2,2,2,4,4,3,NA,NA,Wildlife conservation,female
+After_lectures_001,22,3,3,4,4,1,1,1,3,3,2,3,NA,NA,Wildlife conservation,female
+After_lectures_001,23,5,5,4,3,1,1,3,1,5,2,2,NA,NA,Zoology,female
+After_lectures_001,24,5,5,5,3,5,1,1,1,5,4,3,NA,NA,Zoology with animal behav,female
+After_lectures_001,25,3,3,3,2,2,3,2,3,4,4,4,NA,NA,Zoology with marine zoology,female
+After_lectures_001,26,4,4,4,1,1,5,4,3,4,2,1,NA,NA,Zoology with animal behav,female
+After_lectures_001,27,4,4,4,2,1,5,4,3,4,2,1,NA,NA,Zoology with animal behav,female
+After_lectures_001,28,4,4,2,2,2,3,3,3,4,2,2,NA,NA,Marine Biology,male
+After_lectures_001,29,5,4,4,3,1,3,3,2,5,2,3,NA,NA,Marine Biology,female
+After_lectures_001,30,5,3,4,4,2,2,3,2,5,3,3,NA,NA,Marine Biology and Zoology,female
+After_lectures_001,31,5,5,4,3,2,1,1,1,5,3,4,NA,NA,Biology with biotech,female
+After_lectures_001,32,4,3,3,2,1,5,4,4,5,3,2,NA,NA,Marine Biology and oceanography,female
+After_lectures_001,33,5,4,4,3,3,2,2,1,5,3.5,4,NA,NA,Zoology with conservation,
+After_lectures_001,34,4,4,4,4,2,2,2,2,5,2,3,NA,NA,Marine Biology and oceanography,male
+After_lectures_001,35,5,5,5,4,3,1,1,1,5,3,4,NA,NA,Marine Biology,female
+After_lectures_001,36,5,5,5,4,2,1,1,1,5,5,4,NA,NA,Marine Biology,female
+After_lectures_002,1,4,4,3,3,2,2,3,3,4,3,3,NA,NA,Marine Biology and oceanography,male
+After_lectures_002,2,3,3,2,2,1,2,2,3,5,4,3,NA,NA,Marine vertebrate conservation,male
+After_lectures_002,3,4,4,4,4,3,1,1,1,5,3,4,NA,NA,Zoology with marine zoology,female
+After_lectures_002,4,4,4,4,4,3,2,3,2,5,2,2,NA,NA,Zoology with conservation,female
+After_lectures_002,5,5,4,5,3,2,2,3,2,4,4,2,NA,NA,Zoology with conservation,female
+After_lectures_002,6,5,3,5,3,2,1,2,1,5,5,5,NA,NA,Marine Biology and Zoology,female
+After_lectures_002,7,5,3,5,2,1,3,4,4,5,2,3,NA,NA,Zoology with animal behav,gender fluid
+After_lectures_002,8,5,5,5,5,4,1,1,1,5,5,3,NA,NA,Zoology,girl
+After_lectures_002,9,5,4,4,3,3,1,1,1,5,4,4,NA,NA,Zoology with marine zoology,female
+After_lectures_002,10,5,5,5,4,3,1,2,1,5,4,4,NA,NA,Zoology with animal management,female
+After_lectures_002,11,5,5,5,3,2,3,2,3,4,2,3,NA,NA,Zoology,female
+After_lectures_002,12,4,3,3,3,1,2,2,3,4,1,3,NA,NA,Applied terrestrial and marine ecology,female
+After_lectures_002,13,4,4,4,4,4,4,4,4,4,4,4,NA,NA,Marine Biology and Zoology,male
+After_lectures_002,14,5,5,5,3,1,3,1,4,5,4,4,NA,NA,Zoology,female
+After_lectures_002,15,4,4,4,3,1,3,3,4,4,2,2,NA,NA,Zoology,female
+After_lectures_002,16,3,3,2,2,1,1,1,1,5,1,3,NA,NA,Marine Biology,male
+After_lectures_002,17,5,5,4,3,3,2,3,3,5,2,1,NA,NA,Zoology,female
+After_lectures_002,18,5,5,5,5,2,2,2,2,5,4,4,NA,NA,Marine Biology,male
+After_lectures_002,19,4,3,3,2,2,1,2,2,5,3,3,NA,NA,Marine Biology,male
+After_lectures_002,20,5,5,4,4,3,1,1,1,5,4,4,NA,NA,Marine Biology,gender fluid
+After_lectures_002,21,4,4,3,2,2,2,2,2,5,3,3,NA,NA,NA,NA
+After_lectures_002,22,4,4,2,2,1,4,3,2,4,3,4,NA,NA,Zoology,female
+After_lectures_002,23,1,1,5,2,5,1,5,1,1,5,5,NA,NA,NA,NA
+After_lectures_002,24,5,5,5,4,5,1,1,1,5,5,4,NA,NA,Zoology with conservation,male
+After_lectures_002,25,5,5,4,4,4,2,1,1,5,5,4,NA,NA,Zoology,female
+After_lectures_002,26,4,5,5,4,3,1,1,1,5,4,3,NA,NA,Zoology,female
+After_lectures_002,27,4,4,3,3,2,2,2,2,4,1,1,NA,NA,Zoology,female
+After_lectures_002,28,5,5,4,4,2,1,1,1,5,2,4,NA,NA,Zoology with herp,male
+After_lectures_002,29,5,5,5,5,3,1,1,1,3,3,3,NA,NA,Zoology with herp,male
+After_lectures_002,30,4,4,3,3,2,2,2,2,5,1,3,NA,NA,Zoology with conservation,male
+After_lectures_002,31,4,4,4,3,3,2,2,2,4,4,4,NA,NA,NA,NA
+After_lectures_002,32,4,4,4,1,1,3,3,4,4,2,2,NA,NA,Biology,male
+After_lectures_003,1,5,4,4,4,3,1,1,1,5,3,3,NA,NA,Marine Biology,male
+After_lectures_003,2,5,4,4,4,3,1,2,1,5,3,3,NA,NA,Zoology with marine zoology,female
+After_lectures_003,3,5,5,5,1,1,1,1,1,5,5,5,NA,NA,Marine Biology,Woman
+After_lectures_003,4,4,4,3,2,1,3,3,2,4,2,2,NA,NA,Biology,female
+After_lectures_003,5,4,3,4,2,1,3,3,4,4,2,3,NA,NA,Zoology with marine zoology,male
+After_lectures_003,6,4,4,3,2,1,3,2,2,5,4,4,NA,NA,Biology,male
+After_lectures_003,7,4,4,4,3,3,2,2,2,4,3,3,NA,NA,Zoology,female
+After_lectures_003,8,4,4,5,3,4,3,1,1,5,4,4,NA,NA,Zoology,male
+After_lectures_003,9,4,NA,3,3,2,3,3,2,5,NA,2,NA,NA,Marine Biology and Zoology,female
+After_lectures_003,10,4,4,5,3,2,1,3,1,5,2,2,NA,NA,Zoology with conservation,female
+After_lectures_003,11,5,5,3,3,2,1,1,1,5,3,5,NA,NA,Marine Biology,non-binary
+After_lectures_003,12,5,5,4,2,2,3,3,2,5,1,2,NA,NA,Marine Biology,male
+After_lectures_003,13,4,4,3,3,2,2,1,2,4,2,3,NA,NA,Marine Biology,male
+After_lectures_003,14,5,5,5,3,1,2,3,2,4,3,4,NA,NA,Ocean Sciences,female
+After_lectures_003,15,4,4,4,3,2,2,4,2,5,3,3,NA,NA,Marine Biology,female
+After_lectures_003,16,4,5,4,4,3,1,1,1,5,3,3,NA,NA,Zoology,NA
+After_lectures_003,17,4,4,3,2,1,2,2,2,5,2,4,NA,NA,Zoology,female
+After_lectures_003,18,4,4,4,4,2,2,2,2,5,4,4,NA,NA,Zoology with conservation,female
+After_lectures_003,19,5,4,5,4,3,1,1,1,4,5,5,NA,NA,Zoology with marine zoology,female
+After_lectures_003,20,5,4,4,3,2,1,2,1,5,4,4,NA,NA,Zoology with ornithology,female
+After_lectures_003,21,3,3,3,4,3,2,2,2,3,2,2,NA,NA,Marine Biology,female
+After_lectures_003,22,4,4,4,3,3,2,1,1,5,4,4,NA,NA,Zoology with animal behav,non-binary
+After_lectures_003,23,4,4,3,2,1,2,2,2,4,3,4,NA,NA,NA,NA
+After_lectures_003,24,5,5,4,4,2,3,3,3,4,3,3,NA,NA,Marine Biology,male
+After_lectures_003,25,3,2,2,2,1,4,4,4,5,3,3,NA,NA,Marine Biology,male
+After_lectures_003,26,4,4,4,4,2,2,2,2,5,2,3,NA,NA,Zoology with conservation,female
+After_lectures_003,27,4,3,4,3,3,1,1,1,4,4,4,NA,NA,Marine Biology,male
+After_lectures_003,28,4,4,4,3,2,1,2,1,5,4,4,NA,NA,Marine Biology,male
+After_lectures_003,29,5,4,4,3,3,2,1,1,4,2,3,NA,NA,Zoology with conservation,
+After_lectures_003,30,5,5,5,3,2,1,1,1,5,3,4,NA,NA,Marine Biology,female
+After_lectures_003,31,4,4,5,3,2,3,2,3,5,3,2,NA,NA,Zoology,male
+After_lectures_004,1,4,5,5,2,2,3,4,2,5,2,4,NA,NA,Marine Biology and oceanography,female
+After_lectures_004,2,5,5,4,3,2,1,1,2,5,3,3,NA,NA,Marine vertebrate conservation,female
+After_lectures_004,3,5,5,4,4,2,2,2,1,5,3,4,NA,NA,Zoology,female
+After_lectures_004,4,5,5,5,5,4,2,2,1,5,3,3,NA,NA,wildlife conservation and zoology,gender fluid
+After_lectures_004,5,5,5,4,3,3,1,1,1,5,3,4,NA,NA,wildlife conservation,man
+After_lectures_004,6,5,5,5,3,3,2,1.5,3,4,4,3,NA,NA,Marine Biology and oceanography,male
+After_lectures_004,7,5,5,5,5,3,1,1,1,5,3,4,NA,NA,Zoology with animal behav,insect
+After_lectures_004,8,5,4,5,4,3,1,1,1,5,3,4,NA,NA,Zoology,male
+After_lectures_004,9,5,5,5,4,4,1,2,1,5,4,4,NA,NA,Biology,male
+After_lectures_004,10,5,5,3,5,1,5,5,3,5,3,3,NA,NA,Marine Biology and oceanography,female
+After_lectures_004,11,4,4,2,3,1,2,3,2,4,3,4,NA,NA,Zoology with marine zoology,female
+After_lectures_004,12,5,5,5,3,3,2,5,1,5,4,4,NA,NA,Marine Biology and oceanography,female
+After_lectures_004,13,4,4,3,2,2,2,3,2,4,3,4,NA,NA,Marine Biology and oceanography,female
+After_lectures_004,14,4,4,3,3,1,3,2,3,5,3,3,NA,NA,Marine Biology and oceanography,male
+After_lectures_004,15,4,5,5,3,2,2,2,2,5,4,4,NA,NA,Marine Biology,female
+After_lectures_004,16,5,4,4,2,2,3,2,2,4,4,2,NA,NA,Zoology with conservation,female
+After_lectures_004,17,5,4,4,4,1,1,1,1,5,5,4,NA,NA,wildlife conservation,male
+After_lectures_004,18,5,5,5,4,4,1,1,1,5,5,4,NA,NA,Zoology with herp,female
+After_lectures_004,19,3,4,4,2,1,3,4,1,4,3,2,NA,NA,Zoology,male
+After_lectures_004,20,5,5,5,5,3,1,1,1,5,4,4,NA,NA,Zoology with ornithology,female
+After_lectures_004,21,4,4,4,3,3,2,1,1,4,4,4,NA,NA,Zoology,female
+After_lectures_004,22,4,5,4,4,3,1,1,1,5,4,4,NA,NA,Zoology with conservation,female
+After_lectures_004,23,4,5,5,5,4,1,1,2,5,4,4,NA,NA,Zoology with herp,male
+After_lectures_004,24,5,5,4,3,1,4,4,2,5,4,4,NA,NA,Zoology with marine zoology,female
+After_lectures_004,25,3,4,3,4,1,2,2,2,5,3,4,NA,NA,NA,NA
+After_lectures_004,26,4,4,4,4,3,2,1,2,5,3,3,NA,NA,NA,NA
+After_lectures_004,27,3,3,4,2,1,4,4,4,4,2,4,NA,NA,Marine Biology,male
+After_lectures_004,28,5,4,3,3,2,4,NA,1,5,3,5,NA,NA,Marine Biology and oceanography,demigirl
+After_lectures_004,29,5,4,4,3,2,2,1,2,3,2,2,NA,NA,Zoology with herp,the better one
+After_lectures_004,30,3,2,2,2,1,1,2,3,4,1,2,NA,NA,Marine Biology,male
+After_lectures_004,31,4,4,5,5,2,2,4,1,5,5,2,NA,NA,Marine Biology,female
+After_lectures_005,1,5,5,5,3,1,4,3,4,5,1,1,NA,NA,Zoology with marine zoology,female
+After_lectures_005,2,4,5,5,3,3,2,1,1,3,2,3,NA,NA,Zoology with marine zoology,male
+After_lectures_005,3,4,4,4,4,2,3,3,2,4,4,4,NA,NA,Zoology with animal behav,male
+After_lectures_005,4,5,5,5,4,5,3,2,5,NA,3,5,NA,NA,Zoology with marine zoology,female
+After_lectures_005,5,5,5,5,4,4,1,1,1,5,3,4,NA,NA,Marine Biology and Zoology,non-binary
+After_lectures_005,6,4,4,3,1,1,2,1,4,4,4,4,NA,NA,Zoology with primatology,female
+After_lectures_005,7,5,3,4,4,2,2,2,2,5,1,4,NA,NA,Marine Biology,male
+After_lectures_005,8,4,5,5,4,3,2,1,2,4,3,4,NA,NA,Zoology with marine zoology,male
+After_lectures_005,9,5,5,5,5,4,1,1,1,5,4,4,NA,NA,Biology,male
+After_lectures_005,10,5,5,5,4,4,1,1,1,5,3,4,NA,NA,Biology with biotech,male
+After_lectures_005,11,4,4,4,4,3,2,2,2,5,3,3,NA,NA,Zoology with conservation,male
+After_lectures_005,12,5,4,4,4,2,2,1,1,5,4,4,NA,NA,Zoology with herp,female
+After_lectures_005,13,4,4,4,5,3,3,2,1,4,3,2,NA,NA,Marine Biology,male
+After_lectures_005,14,4,4,4,3,3,1,1,1,5,5,4,NA,NA,Zoology with animal behav,female
+After_lectures_005,15,4,4,4,4,2,2,1,2,3,2,3,NA,NA,Zoology with herp,male
+After_lectures_005,16,5,4,4,3,2,2,1,1,3,4,4,NA,NA,Marine Biology,male
+After_lectures_005,17,4,4,4,3,2,3,3,2,4,2,4,NA,NA,Zoology,female
+After_lectures_005,18,4,4,3,3,2,1,1,1,5,2,2,NA,NA,Zoology,male
+After_lectures_005,19,5,5,5,3,3,2,1,2,5,2,2,NA,NA,NA,NA
+After_lectures_005,20,4,4,3,1,1,2,1,1,3,3,2,NA,NA,Marine Biology,female
+After_lectures_005,21,5,5,5,4,3,1,1,1,5,3,3,NA,NA,NA,NA
+After_lectures_005,22,5,5,4,3,3,1,2,1,5,2,4,NA,NA,Enviromental science,female
+After_lectures_005,23,4,4,4,4,3,3,3,1,5,3,4,NA,NA,Marine Biology,NA
+After_lectures_005,24,4,4,5,3,2,1,2,1,5,4,4,NA,NA,Zoology,male
+After_lectures_005,25,4,5,3,3,3,2,3,2,5,2,3,NA,NA,Zoology,male
+After_lectures_005,26,4,5,4,3,3,1,1,1,4,4,4,NA,NA,Zoology,male
+After_lectures_005,27,5,3,5,4,1,5,3,1,5,3,3,NA,NA,Zoology with herp,male
+After_lectures_005,28,5,4,4,2,1,1,1,1,5,4,5,NA,NA,Zoology with herp,female
+After_lectures_005,29,4,4,4,4,3,2,2,2,4,3,3,NA,NA,Applied terrestrial and marine ecology,male
+After_lectures_005,30,4,4,4,3,2,2,1,1,5,3,2,NA,NA,Marine Biology,male
+After_lectures_005,31,4,4,4,2,2,1,1,1,4.5,3.5,3,NA,NA,Marine Biology and Zoology,female
+After_lectures_005,32,5,5,3,3,3,1,1,1,5,2.5,3,NA,NA,Biology,female
+After_lectures_006,1,4,4,4,3,1,1,1,1,5,3,4,NA,NA,Marine Biology,male
+After_lectures_006,2,4,4,4,4,3,1,1,1,5,3,4,NA,NA,wildlife conservation,male
+After_lectures_006,3,4,5,4,4,1,1,1,1,5,4,3,NA,NA,Marine Biology,male
+After_lectures_006,4,3,3,3,2,1,5,5,3,5,3,3,NA,NA,Zoology,female
+After_lectures_006,5,4,4,4,3,1,2,1,3,5,4,4,NA,NA,Zoology,male
+After_lectures_006,6,5,5,5,5,3,1,1,1,5,4,5,NA,NA,Zoology with conservation,male
+After_lectures_006,7,4,4,4,3,2,2,3,2,5,4,5,NA,NA,Zoology with conservation,Woman
+After_lectures_006,8,4,4,4,3,3,3,4,2,5,2,3,NA,NA,Biology,female
+After_lectures_006,9,4,4,3,2,2,1,3,2,5,4,4,NA,NA,Marine Biology,female
+After_lectures_006,10,5,5,5,4,3,2,2,2,5,2,3,NA,NA,Zoology,male
+After_lectures_006,11,4,5,5,4,1,3,3,3,4,3,2,NA,NA,Marine Biology,Woman
+After_lectures_006,12,4,5,5,4,1,3,3,3,4,3,2,NA,NA,Marine Biology,female
+After_lectures_006,13,5,4,2,1,1,4,5,3,5,4,4,NA,NA,Biology with biotech,female
+After_lectures_006,14,4,4,3,3,2,2,3,2,4,1,3,NA,NA,Marine Biology,non-binary
+After_lectures_006,15,5,4,5,5,4,1,1,1,5,4,2,NA,NA,wildlife conservation,female
+After_lectures_006,16,3,3,4,1,1,4,4,3,4,4,4,NA,NA,Biology,female
+After_lectures_006,17,5,5,5,4,3,2,4,1,5,3,4,NA,NA,Zoology with conservation,female
+After_lectures_006,18,4,4,4,2,1,3,5,3,4,4,4,NA,NA,Zoology with animal management,female
+After_lectures_006,19,4,5,5,3,3,1,1,1,5,5,4,NA,NA,wildlife conservation,NA
+After_lectures_006,20,4,4,2,2,1,2,2,1,5,2,3,NA,NA,Marine Biology,female
+After_lectures_006,21,4,4,2,2,1,1,1,2,4,3,3,NA,NA,Marine Biology,female
+After_lectures_006,22,4,4,4,2,2,3,3,3,4,2,2,NA,NA,wildlife conservation,female
+After_lectures_006,23,3,3,3,3,1,3,3,3,4,4,4,NA,NA,Marine Biology and Zoology,female
+After_lectures_006,24,4,3,3,2,1,4,3,3,5,2,2,NA,NA,Zoology with ornithology,male
+After_lectures_006,25,4,5,5,3,3,3,1,1,5,3,3,NA,NA,Zoology with herp,male
+After_lectures_007,1,5,5,5,4,3,1,1,1,5,3,4,NA,NA,Zoology with herp,female
+After_lectures_007,2,5,5,5,4,2,1,2,1,5,1,4,NA,NA,Zoology,boy
+After_lectures_007,3,5,4,4,3,3,2,2,2,4,3,3,NA,NA,Marine Biology,male
+After_lectures_007,4,4,4,4,3,2,2,3,2,5,4,4,NA,NA,Zoology with herp,male
+After_lectures_007,5,5,5,4,4,2,1,1,1,5,4,4,NA,NA,Zoology with primatology,male
+After_lectures_007,6,5,4,4,3,3,2,1,1,4,4,4,NA,NA,Marine Biology,male
+After_lectures_007,7,5,3,4,3,2,1,1,1,4,1,2,NA,NA,wildlife conservation,female
+After_lectures_007,8,5,4,3.5,3,2,2,2,1,5,2,4,NA,NA,Zoology with primatology,male
+After_lectures_007,9,5,5,5,4,3,2,2,2,4,4,4,NA,NA,Zoology,female
+After_lectures_007,10,5,NA,4,4,3,2,1,1,5,3,4,NA,NA,Zoology,female
+After_lectures_007,11,4,3,4,3,1,3,1,1,5,3,3,NA,NA,Marine Biology,dude
+After_lectures_007,12,3,3,3,3,3,1,1,1,3.5,2,2,NA,NA,Zoology,man
+After_lectures_007,13,4,4,4,4,2,1,2,2,5,3,3,NA,NA,Zoology with animal behav,goth
+After_lectures_007,14,4,4,3,2,1,2,2,3,4,3,4,NA,NA,Marine vertebrate conservation,female
+After_lectures_007,15,5,5,2,3,2,2,1,1,5,3,3,NA,NA,Marine Biology and oceanography,Woman
+After_lectures_007,16,5,4,4,4,2,1,1,1,4,1,1,NA,NA,wildlife conservation,
+After_lectures_007,17,5,4,4,3,1,2,3,2,5,3,4,NA,NA,Marine Biology,male
+After_lectures_007,18,5,4,3,2,1,1,1,2,5,4,4,NA,NA,Marine vertebrate conservation,Woman
+After_lectures_007,19,5,4,3,2,1,1,1,1,4,4,4,NA,NA,Marine vertebrate conservation,female
+After_lectures_007,20,5,5,4,3,1,1,2,1,5,4,4,NA,NA,Marine vertebrate conservation,female
+After_lectures_007,21,4,4,2,1,1,3,3,3,4,4,4,NA,NA,Marine Biology,male
+After_lectures_007,22,4,4,3,2,2,1,1,1,5,4,5,NA,NA,Marine Biology and oceanography,male
+After_lectures_007,23,5,5,5,5,3,1,3,1,5,5,5,NA,NA,Marine Biology and Zoology,female
+After_lectures_007,24,5,5,4,3,1,3,1,3,3,3,4,NA,NA,Marine Biology and oceanography,female
+After_lectures_007,25,5,4,4,4,2,3,3,3,5,3,4,NA,NA,Marine Biology and Zoology,female
+After_lectures_007,26,4,4,2,2,1,1,1,2,5,2,2,NA,NA,Marine Biology,female
+After_lectures_007,27,NA,3,2,1,1,2,3,3,4,1,2,NA,NA,Marine Biology and Zoology,female
+After_lectures_007,28,5,5,5,4,3,2,1,1,5,1,3,NA,NA,Marine Biology and oceanography,non-binary
+After_lectures_007,29,4,4,3,2,2,4,4,2,5,1,2,NA,NA,Zoology with animal behav,female
+After_lectures_007,30,4,4,3,3,2,1,1,2,5,3,3,NA,NA,Marine Biology,male
+After_lectures_008,1,4,4,3,3,1,2,2,3,5,2,3,NA,NA,Marine Biology and Zoology,male
+After_lectures_008,2,4,3,3,2,2,1,1,1,4,2,2,NA,NA,Zoology with conservation,NA
+After_lectures_008,3,5,5,4,3,1,4,5,3,5,3,3,NA,NA,Zoology with conservation,NA
+After_lectures_008,4,4,4,4,4,2,4,4,3,5,2,4,NA,NA,Zoology with conservation,female
+After_lectures_008,5,5,4,3,3,1,1,1,2,5,3,3,NA,NA,Zoology with animal behav,female
+After_lectures_008,6,4,5,4,3,1,1,1,1,5,3,4,NA,NA,Zoology with herp,male
+After_lectures_008,7,4,3,3,2,1,3,3,3,4,2,3,NA,NA,Marine Biology,female
+After_lectures_008,8,5,5,4,3,2,2,2,2,5,2,2,NA,NA,Zoology,NA
+After_lectures_008,9,5,5,5,5,5,1,1,1,5,3,4,NA,NA,Applied terrestrial and marine ecology,male
+After_lectures_008,10,4,4,4,3,2,3,2,2,4,3,2,NA,NA,Zoology with conservation,male
+After_lectures_008,11,4,4,4,4,2,2,2,2,4,2,3,NA,NA,Zoology with marine zoology,female
+After_lectures_008,12,4,3,4,4,1,3,3,2,4,3,4,NA,NA,Zoology with marine zoology,female
+After_lectures_008,13,5,5,4,4,2,2,3,2,5,3,3,NA,NA,wildlife conservation,male
+After_lectures_008,14,5,5,5,4,2,1,1,1,5,2,3,NA,NA,wildlife conservation,female
+After_lectures_008,15,5,5,5,3,4,1,1,1,5,4,4,NA,NA,Applied terrestrial and marine ecology,NA
+After_lectures_008,16,5,5,5,5,3,1,1,1,5,4,4,NA,NA,Zoology with conservation,male
+After_lectures_008,17,4,4,4,3,2,2,3,2,4,4,4,NA,NA,Zoology,male
+After_lectures_008,18,4,4,3,1,1,3,1,5,4,2,3,NA,NA,Marine Biology and oceanography,female
+After_lectures_008,19,3,3,3,3,3,3,3,3,3,3,3,NA,NA,wildlife conservation,male
+After_lectures_008,20,5,5,5,5,4,1,1,1,5,4,4,NA,NA,Zoology with conservation,male
+After_lectures_008,21,5,4,5,3,4,1,2,1,5,3,2,NA,NA,Zoology with herp,male
+After_lectures_008,22,5,5,4,4,3,1,1,2,5,3,2,NA,NA,wildlife conservation,male
+After_lectures_008,23,5,4,4,4,3,1,1,1,5,3,4,NA,NA,Applied terrestrial and marine ecology,female
+After_lectures_008,24,4,4,4,3,2,2,2,1,4,2,4,NA,NA,Zoology,NA
+After_lectures_008,25,5,3,3,2,2,2,2,3,5,3,4,NA,NA,Applied terrestrial and marine ecology,non-binary
+After_lectures_008,26,4,4,4,3,3,1,1,1,4,2,4,NA,NA,Zoology,NA
+After_lectures_008,27,5,5,4,3,2,2,3,2,5,1,2,NA,NA,Marine Biology,male
+After_lectures_008,28,4,4,2,2,1,5,1,2,5,2,2,NA,NA,Marine Biology,male
+After_lectures_008,29,4,4,3,2,1,2,3,3,4,3,3,NA,NA,Marine Biology,female
+After_lectures_008,30,4,4,3,3,3,1,1,1,5,4,4,NA,NA,Zoology with marine zoology,male
+After_lectures_009,1,4,4,4,4,3,3,3,4,5,2,2,NA,NA,NA,NA
+After_lectures_009,2,4,3,4,3,1,2,1,4,5,3,4,NA,NA,Zoology,male
+After_lectures_009,3,5,5,5,3,2,2,3,2,5,4,4,NA,NA,Zoology,lad
+After_lectures_009,4,4,4,5,3,2,3,1,3,4,3,3,NA,NA,Zoology with herp,female
+After_lectures_009,5,4,4,4,4,2,3,2,2,5,3,3,NA,NA,Zoology,male
+After_lectures_009,6,5,4,4,3,3,2,1,1,5,3,4,NA,NA,Zoology with herp,female
+After_lectures_009,7,4,4,4,3,1,2,2,2,5,2,2,NA,NA,Marine Biology and Zoology,male
+After_lectures_009,8,5,5,5,4,2,1,1,3,4,3,4,NA,NA,Zoology with conservation,female
+After_lectures_009,9,4,4,4,4,2,4,4,2,4,2,4,NA,NA,Zoology with herp,female
+After_lectures_009,10,4,4,3,2,1,3,2,3,5,3,3,NA,NA,Marine Biology,female
+After_lectures_009,11,5,4,3,4,2,1,1,1,4,4,3,NA,NA,Marine Biology,female
+After_lectures_009,12,5,4,4,4,2,1,2,1,5,4,3,NA,NA,Marine Biology,female
+After_lectures_009,13,4,4,4,4,3,2,1,1,5,3,3,NA,NA,wildlife conservation,NA
+After_lectures_009,14,4,4,3,2,1,3,1,3,5,3,3,NA,NA,Zoology with herp,male
+After_lectures_009,15,4,4,4,3,3,1,1,1,5,4,4,NA,NA,Zoology with herp,female
+After_lectures_009,16,5,4,4,3,2,2,3,2,4,3,4,NA,NA,Zoology,female
+After_lectures_009,17,5,5,3,2,1,5,5,5,3,1,1,NA,NA,wildlife conservation,female
+After_lectures_009,18,5,3,3,3,1,3,3,3,4,3,3,NA,NA,Biology,female
+After_lectures_009,19,5,2,4,3,1,1,4,3,1,3,3,NA,NA,Zoology with animal behav,female
+After_lectures_009,20,4,4,3,2,1,2,1,3,4,3,4,NA,NA,Zoology with marine zoology,male
+After_lectures_009,21,4,5,4,3,3,2,3,2,4,3,3,NA,NA,Zoology,female
+After_lectures_009,22,4,3,2,2,2,2,2,2,2,3,4,NA,NA,Marine Biology,male
+After_lectures_009,23,4,4,3,2,1,3,3,3,5,2,2,NA,NA,Marine Biology and Zoology,female
+After_lectures_009,24,4,3,2,2,1,2,2,2,4,4,4,NA,NA,Marine vertebrate conservation,male
+After_lectures_009,25,5,4,4,3,1,1,2,2,4,4,3,NA,NA,Zoology,female
+After_lectures_009,26,4,3,4,2,1,3,3,3,4,3,3,NA,NA,Marine Biology and Zoology,female
+After_lectures_009,27,5,4,4,3,2,1,2,2,4,4,1,NA,NA,Zoology,female
+After_lectures_009,28,5,4,4,3,2,1,2,3,4,3,1,NA,NA,Zoology,female
+After_lectures_009,29,5,5,5,2,1,2,2,3,5,3,3,NA,NA,Zoology,female
+After_lectures_009,30,4,3,3,3,2,2,2,3,4,2,3,NA,NA,Biology with biotech,male
+After_lectures_009,31,4,4,2,2,1,1,1,1,5,2,3,NA,NA,Marine Biology,female
+After_prac_001,1,4,4,4,3,3,2,2,2,5,4,3,5,3,Zoology,male
+After_prac_001,2,4,4,5,4,2,3,3,2,5,4,4,5,5,Zoology with herp,female
+After_prac_001,3,4,4,3,3,3,3,2,2,5,4,3,4,4,Biology with biotech,male
+After_prac_001,4,4,4,4,4,4,2,1,1,5,4,4,5,5,Zoology with marine zoology,female
+After_prac_001,5,5,5,5,4,4,1,1,1,5,4,4,5,5,Zoology,female
+After_prac_001,6,5,5,5,4,4,1,1,1,5,5,5,5,5,Zoology with animal management,female
+After_prac_001,7,3,4,4,3,2,3,2,1,5,4,3,5,5,Zoology with primatology,female
+After_prac_001,8,4,4,4,3,3,1,1,1,5,3,3,5,5,Biology,male
+After_prac_001,9,5,5,4,4,1,4,5,2,5,4,3,4,2,Zoology with conservation,NA
+After_prac_001,10,5,5,5,4,4,1,1,1,5,4,3,5,3,Zoology with herp,male
+After_prac_001,11,4,5,4,4,3,1,1,1,5,4,3,5,5,Zoology with conservation,female
+After_prac_001,12,4,3,3,4,3,1,1,1,5,4,4,4,1,Zoology with marine zoology,male
+After_prac_001,13,4,4,5,3,4,1,1,1,5,4,3,5,3,Zoology,male
+After_prac_001,14,4,4,5,3,2,2,2,2,4,3,3,5,5,Zoology,female
+After_prac_001,15,5,5,5,4,3,3,4,1,4,4,4,4,4,Zoology,male
+After_prac_001,16,5,5,4,4,3,1,2,NA,5,4,4,5,5,Zoology with ornithology,female
+After_prac_001,17,5,5,4,3,4,1,1,1,5,4,4,5,3,Zoology with animal behav,female
+After_prac_001,18,5,5,5,4,4,1,1,1,5,4,5,5,5,Zoology with ornithology,gender fluid
+After_prac_001,19,5,5,5,4,4,1,2,1,5,4,4,5,5,Biology,male
+After_prac_001,20,4,4,4,3,4,1,1,1,5,3,3,4,1,NA,NA
+After_prac_001,21,4,4,4,2,1,3,5,2,4,5,5,5,5,Zoology,male
+After_prac_001,22,5,5,5,5,4,1,1,1,5,5,5,5,5,Zoology with conservation,male
+After_prac_001,23,5,5,5,4,4,1,1,1,5,4,4,5,5,NA,NA
+After_prac_001,24,5,4,4,4,2,1,2,1,5,2,2,4,3,Zoology with herp,male
+After_prac_001,25,4,4,5,4,4,1,1,1,5,5,5,5,5,Zoology with animal behav,non-binary
+After_prac_001,26,5,5,4,3,3,2,3,2,5,3,3,5,5,Zoology,male
+After_prac_001,27,5,5,5,5,4,1,1,1,5,4,4,4,3,Zoology,male
+After_prac_001,28,4,5,5,4,4,2,2,1,5,5,5,5,5,Zoology with conservation,female
+After_prac_002,1,5,5,5,5,4,1,1,1,5,3,3,5,5,Biology,Crustacean
+After_prac_002,2,5,5,5,5,3,1,1,1,5,4,4,5,5,Zoology with animal behav,NA
+After_prac_002,3,4,4,4,3,1,4,5,2,5,4,3,5,2,Zoology with marine zoology,female
+After_prac_002,4,5,4,4,3,2,2,1,2,5,4,4,5,4,Zoology with conservation,male
+After_prac_002,5,4,4,3,3,3,3,2,2,3,3,3,4,3,Zoology with animal management,female
+After_prac_002,6,5,5,4,3,2,2,2,2,4,5,4,5,5,Zoology,female
+After_prac_002,7,4,5,4,3,4,1,1,1,5,5,4,4,1,Zoology with herp,male
+After_prac_002,8,5,5,5,4,1,1,2,2,5,4,3,5,4,Zoology with conservation,female
+After_prac_002,9,4,4,5,3,2,3,3,2,5,4,4,5,3,Zoology with animal behav,female
+After_prac_002,10,5,5,5,5,2,1,1,1,5,4,4,5,3,Zoology with conservation,male
+After_prac_002,11,5,5,4,4,3,1,1,1,5,4,2,5,3,Zoology with herp,female
+After_prac_002,12,5,5,5,3,3,1,1,1,1,3,3,5,5,Zoology,female
+After_prac_002,13,5,5,5,3,3,1,2,1,5,2,2,3,5,Zoology,female
+After_prac_002,14,5,5,3,2,1,3,4,3,5,4,3,5,3,Zoology with marine zoology,female
+After_prac_002,15,4,4,4,2,1,2,2,2,5,4,3,5,4,Zoology with primatology,male
+After_prac_002,16,4,4,4,2,2,2,3,2,4,3,3,4,4,Zoology with conservation,female
+After_prac_002,17,4,4,3,2,1,2,1,3,5,4,4,5,3,Zoology with herp,male
+After_prac_002,18,5,4,5,3,3,1,2,2,4,3,3,5,3,Zoology,male
+After_prac_002,19,3,3,3,3,2,2,2,2,3,4,4,4,4,Zoology with marine zoology,female
+After_prac_002,20,3,3,3,2,1,2,2,3,4,2,2,4,3,Zoology with animal behav,female
+After_prac_002,21,5,4,4,3,4,1,1,1,4,4,4,4,3,Zoology with animal behav,male
+After_prac_002,22,5,5,3,2,2,3,3,3,5,1,1,5,4,Zoology,female
+After_prac_002,23,4,3,3,2,2,5,1,3,5,3,2,4,3,Zoology,female
+After_prac_002,24,4,4,4,3,2,2,1,2,3,3,3,4,2,Zoology with herp,male
+After_prac_002,25,5,5,5,4,3,1,1,1,5,5,4,5,1,Zoology with herp,male
+After_prac_002,26,5,4,4,3,3,1,1,1,5,4,4,5,3,Zoology,male
+After_prac_003,1,4,4,5,4,3,1,1,1,5,4,4,5,3,Zoology,female
+After_prac_003,2,5,5,5,4,2,1,1,1,5,4,3,4,3,Zoology with conservation,female
+After_prac_003,3,5,4,4,2,2,2,1,2,5,4,3,4,3,Zoology with herp,male
+After_prac_003,4,5,4,4,3,3,2,1,1,5,4,3,5,4,Zoology,male
+After_prac_003,5,4,4,4,3,1,2,1,2,4,3,3,4,1,Zoology,female
+After_prac_003,6,4,4,4,3,3,2,2,2,5,3,3,5,4,Zoology with conservation,male
+After_prac_003,7,5,5,5,3,3,2,3,2,5,4,3,5,5,Biology,female
+After_prac_003,8,4,5,4,3,2,1,1,1,5,4,4,5,3,Zoology with herp,male
+After_prac_003,9,4,4,4,3,3,1,1,1,5,4,4,5,3,Zoology,female
+After_prac_003,10,5,4,4,3,1,1,2,2,5,4,4,5,3,Zoology with herp,male
+After_prac_003,11,5,5,4,3,3,1,1,1,5,2,2,4,4,Biology,female
+After_prac_003,12,4,4,3,3,2,3,1,2,4,3,4,4,5,Zoology with herp,female
+After_prac_003,13,5,5,4,4,2,1,1,1,5,5,4,5,3,Zoology with primatology,male
+After_prac_003,14,4,3,4,1,1,4,4,3,4,4,4,4,1,Biology,female
+After_prac_003,15,5,5,5,4,3,1,1,1,5,4,4,4,3,Zoology with herp,female
+After_prac_003,16,4,4,3,3,3,3,2,2,5,4,2,5,5,Zoology with animal behav,female
+After_prac_003,17,5,5,5,5,5,1,2,1,5,4,4,4,3,Zoology,female
+After_prac_003,18,4,5,4,3,2,3,3,2,5,3,2,4,3,Biology,female
+After_prac_003,19,5,4,5,3,2,1,1,1,4,4,4,5,3,Zoology,male
+After_prac_003,20,5,5,5,4,2,1,1,1,5,4,4,5,5,Zoology,female
+After_prac_003,21,5,NA,4,3,3,2,1,1,5,4,3,5,3,Zoology,male
+After_prac_003,22,4,4,4,3,3,1,1,1,4,4,4,4,3,Zoology,female
+After_prac_003,23,4,4,4,4,3,2,3,2,5,4,3,4,3,Zoology with herp,male
+After_prac_003,24,4,4,3,3,2,3,4,2,5,3,4,5,5,Zoology,female
+After_prac_003,25,5,5,5,4,3,1,1,1,5,4,4,5,3,Zoology,female
+After_prac_003,26,5,5,5,5,4,1,1,1,5,4,4,5,5,Zoology,female
+After_prac_003,27,5,5,5,5,2,1,1,1,5,5,5,5,5,Zoology with marine zoology,male
+After_prac_003,28,4,4,4,1,1,5,4,5,4,3,3,4,3,Biology,male
+After_prac_003,29,5,5,5,3,4,1,1,1,5,5,5,5,5,Biology,male
+After_prac_004,1,5,4,4,3,3,1,2,1,4,3,3,4,4,NA,NA
+After_prac_004,2,4,5,5,4,4,1,1,1,5,4,3,5,3,Zoology,female
+After_prac_004,3,5,5,5,4,4,1,2,1,5,3,3,4,4,Zoology with marine zoology,female
+After_prac_004,4,5,4,4,3,3,1,1,1,5,3,3,4,5,Zoology with herp,male
+After_prac_004,5,5,5,5,5,4,1,1,1,5,4,4,5,5,Zoology,female
+After_prac_004,6,5,5,4,4,3,1,1,1,5,5,4,5,4,Zoology with conservation,male
+After_prac_004,7,5,NA,5,5,2,1,1,1,5,4,4,5,5,NA,NA
+After_prac_004,8,4,4,3.5,3,2,1,1,2,4,4,4,5,1,Biology with biotech,male
+After_prac_004,9,5,4,3,3,3,1,1,1,5,4,4,5,1,Zoology with marine zoology,
+After_prac_004,10,5,5,5,5,5,1,1,1,5,4,4,5,5,Zoology,non-binary
+After_prac_004,11,4,4,5,3,3,1,2,2,5,3,2,4,5,Zoology with animal management,male
+After_prac_004,12,5,4,4,4,4,1,1,1,5,3,3,5,3,Zoology,male
+After_prac_004,13,5,5,5,5,3,1,1,1,5,4,3,5,5,Zoology with ornithology,female
+After_prac_004,14,4,3,3,3,2,1,1,2,4,3,3,4,2,Zoology with animal behav,female
+After_prac_004,15,5,4,4,3,2,1,1,1,5,4,4,5,3,Zoology with marine zoology,male
+After_prac_004,16,5,5,5,4,3,1,1,1,5,4,4,5,5,Zoology,female
+After_prac_004,17,5,5,5,5,3,1,1,1,5,4,3,5,5,Zoology with animal behav,NA
+After_prac_004,18,4,4,5,3,3,2,2,1,5,4,4,5,4,Zoology with herp,non-binary
+After_prac_004,19,4,4,4,3,3,3,3,2,5,4,4,5,4,Zoology,female
+After_prac_004,20,4,4,3,1,1,1,2,3,4,4,4,5,1,Zoology with primatology,female
+After_prac_004,21,5,4,4,3,3,1,1,1,5,4,4,5,3,Zoology with ornithology,female
+After_prac_004,22,5,5,5,3,4,1,1,1,5,5,5,5,5,Zoology with animal behav,male
+After_prac_004,23,5,5,5,3,3,1,2,1,5,4,4,5,5,NA,NA
+After_prac_004,24,5,4,NA,3,3,1,2,1,5,3,3,5,5,Zoology with conservation,female
+After_prac_004,25,4,4,4,3,3,2,2,2,4,3,3,5,4,Zoology,female
+After_prac_004,26,5,5,4,2,1,2,3,2,5,2,2,4,4,Zoology with animal behav,female
+After_prac_004,27,4,4,5,2,1,3,4,1,5,5,5,5,3,Biology,male
+After_prac_004,28,3,3,3,3,3,3,3,3,3,2,2,4,4,NA,NA
+After_prac_004,29,4,4,4,4,3,1,1,1,4,3,4,4,3,Zoology with herp,male
+After_prac_004,30,5,4,4,3,1,1,4,1,5,4,2,4,2,Zoology with conservation,non-binary
+After_prac_004,31,4,4,4,3,2,4,3,3,4,3,3,4,3,Zoology with conservation,NA
+After_prac_004,32,4,4,4,3,2,3,3,2,4,3,2,4,4,Zoology,female
+After_prac_004,33,4,3,5,4,4,1,2.5,1,5,3,3,4,4,Zoology,male
+After_prac_004,34,4,4,4,3,1,3,3,3,4,2,2,4,3,Zoology,female
+After_prac_005,1,4,4,4,4,2,1,1,2,4,3,3,4,5,Zoology,female
+After_prac_005,2,5,5,5,4,4,1,1,1,4,4,4,5,5,Zoology,NA
+After_prac_005,3,5,5,5,5,4,1,1,1,5,5,4,5,4,Zoology,male
+After_prac_005,4,5,5,5,5,5,1,1,1,5,4,4,5,3,Zoology with conservation,male
+After_prac_005,5,5,5,4,3,2,1,2,2,5,3,4,5,4,Zoology with herp,female
+After_prac_005,6,4,4,4,2,2,3,4,2,5,3,3,4,3.5,Zoology,female
+After_prac_005,7,5,4,5,4,4,1,1,1,5,5,4,5,3,Zoology,male
+After_prac_005,8,5,5,5,3,2,2,3,4,5,4,3,5,5,Zoology,female
+After_prac_005,9,5,4,5,3,3,1,1,1,5,5,5,5,5,Zoology with marine zoology,female
+After_prac_005,10,5,5,4,3,3,1,1,1,5,4,4,5,4,Zoology with marine zoology,female
+After_prac_005,11,4,4,4,4,3,1,1,1,5,5,4,5,3,Zoology,girl
+After_prac_005,12,5,5,2,1,1,1,1,1,5,4,3,4,5,Zoology with animal behav,female
+After_prac_005,13,4,4,4,4,3,3,2,1,4,4,4,5,4,Zoology with animal behav,male
+After_prac_005,14,5,4,4,4,3,1,1,1,5,3,4,5,5,Zoology with marine zoology,male
+After_prac_005,15,5,5,4,2,1,1,2,1,5,3,3,5,5,Zoology,female
+After_prac_005,16,5,4,4,3,3,2,2,2,5,4,4,5,5,Zoology,female
+After_prac_005,17,5,4,4,4,3,1,1,1,5,5,5,3,3,Zoology,female
+After_prac_005,18,5,5,5,4,2,1,1,1,5,5,4,5,5,Zoology with herp,female
+After_prac_005,19,4,4,4,3,1,4,4,3,4,3,3,4,2,Zoology,female
+After_prac_005,20,4,4,4,3,2,1,1,1,5,4,4,5,4,Zoology,female
+After_prac_005,21,4,4,4,3,2,3,2,3,4,4,3,4,2,Zoology with conservation,female
+After_prac_005,22,4,4,4,3,2,3,2,2,4,4,4,4,1,Biology with biotech,male
+After_prac_005,23,5,5,5,5,5,1,1,1,5,5,4,3,1,NA,NA
+After_prac_005,24,4,4,5,4,3,2,2,1,5,3,3,5,4,Zoology with conservation,female
+After_prac_005,25,5,5,5,5,4,2,2,1,5,5,4,4,4,Zoology with ornithology,they/them
+After_prac_005,26,5,5,5,4,2,1,1,1,5,5,4,4,5,Zoology with herp,female
+After_prac_005,27,4,4,4,2,2,2,2,2,5,4,4,4,4,Zoology with conservation,female
+After_prac_005,28,5,5,4,3,3,1,1,1,4,4,4,5,3,Zoology with herp,female
+After_prac_005,29,5,5,3,3,1,2,3,2,5,4,3,4,4,Zoology with animal management,male
+After_prac_005,30,5,5,5,4,3,1,2,1,5,4,4,5,3,Zoology with marine zoology,female
+After_prac_005,31,4,4,4,3,2,2,3,3,4,4,3,4,4,Zoology with animal management,female
+After_prac_006,1,5,5,5,4,3,2,1,1,5,4,4,5,5,Biology,female
+After_prac_006,2,4,4,5,4,2,1,2,1,5,4,4,5,3,Zoology with herp,male
+After_prac_006,3,4,4,4,3,2,1,1,1,4,4,4,5,3,NA,NA
+After_prac_006,4,4,5,5,2,1,4,3,1,5,4,2,4,4,Biology with biotech,male
+After_prac_006,5,5,5,5,5,3,1,1,1,5,4,4,5,1,Zoology with herp,
+After_prac_006,6,4,3,5,4,3,3,3,1,5,3,4,5,2,NA,NA
+After_prac_006,7,4,4,4,4,2,2,2,2,4,4,3,4,4,Zoology,female
+After_prac_006,8,4,4,4,4,3,2,2,2,4,4,4,4,4,Zoology with conservation,female
+After_prac_006,9,5,5,5,5,5,1,1,1,5,4,4,5,1,Zoology with herp,female
+After_prac_006,10,4,4,4,3,1,3,3,3,4,4,4,4,3,Zoology with herp,male
+After_prac_006,11,4,4,4,3,2,2,2,1,4,3,3,4,4,Zoology with animal behav,male
+After_prac_006,12,5,5,5,3,4,1,1,1,5,4,5,5,3,Biology with biotech,male
+After_prac_006,13,5,5,4,3,3,1,1,1,5,4,4,5,3,Zoology with herp,female
+After_prac_006,14,5,5,5,3,2,4,3,2,4,3,2,4,2,Zoology,female
+After_prac_006,15,4,4,4,4,2,2,2,2,4,3,3,4,3,NA,NA
+After_prac_006,16,5,5,5,4,3,1,1,1,5,4,4,5,3,Zoology with animal behav,male
+After_prac_006,17,4,4,4,4,3,2,2,2,5,4,3,5,2,Zoology,male
+After_prac_006,18,5,4,5,3,1,3,4,1,4,4,3,5,4,Zoology,male
+After_prac_006,19,5,5,5,5,3,1,3,1,5,5,4,5,5,Zoology,male
+After_prac_006,20,5,5,5,5,2,1,1,1,5,4,4,5,3,Zoology with herp,male
+After_prac_006,21,5,5,5,5,3,1,1,1,4,4,4,4,1,Zoology with herp,male
+After_prac_006,22,5,5,5,5,5,1,1,1,5,5,5,5,3,Zoology with conservation,male
+After_prac_006,23,5,4,4,3,1,1,1,1,5,5,5,5,3,Zoology with herp,female
+After_prac_006,24,4,4,4,3,1,3,4,3,4,4,3,4,4,Zoology with marine zoology,female
+After_prac_007,1,4,4,3,3,4,1,1,1,5,5,5,3,1,Zoology with ornithology,male
+After_prac_007,2,5,5,5,3,2,1,1,1,5,4,3,4,1,Zoology with marine zoology,non-binary
+After_prac_007,3,5,5,4,3,1,3,4,2,5,1,2,4,2,Zoology with marine zoology,female
+After_prac_007,4,5,4,4,3,4,2,3,2,5,3,3,5,3,Zoology with herp,male
+After_prac_007,5,4,4,4,3,2,4,5,3,4,3,3,4,4,Zoology with conservation,female
+After_prac_007,6,5,5,5,5,4,1,1,1,5,4,4,5,3,Zoology with herp,female
+After_prac_007,7,4,4,4,3,2,1,1,2,4,4,3,4,4,Zoology with conservation,female
+After_prac_007,8,4.5,5,5,5,5,5,5,5,5,5,5,5,5,Zoology with herp,male
+After_prac_007,9,4,4,4,3,3,1,1,1,5,3,2,4,5,Zoology with marine zoology,female
+After_prac_007,10,4,4,4,3,2,1,1,2,5,4,3,5,3,Zoology with conservation,male
+After_prac_007,11,4,4,3,4,4,1,1,1,5,5,4,5,4,Biology with biotech,female
+After_prac_007,12,3,4,3,2,1,2,2,2,4,4,4,5,3,Biology with biotech,female
+After_prac_007,13,4,4,3,2,3,1,1,1,5,4,4,4,3,Biology with biotech,female
+After_prac_007,14,5,5,4,3,1,3,5,2,5,2,3,4,2,Zoology with marine zoology,female
+After_prac_007,15,5,5,5,4,2,1,1,1,5,3,3,5,4,Zoology,boy
+After_prac_007,16,5,5,5,3,3,3,3,2,5,4,4,4,2,Zoology,male
+After_prac_007,17,4,4,4,4,2,2,2,2,5,3,4,4,4,Zoology with marine zoology,female
+After_prac_007,18,4,4,4,3,3,2,2,1,5,3,3,5,4,Zoology,male
