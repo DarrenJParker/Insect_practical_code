@@ -585,6 +585,29 @@ Q8_gender_BLALAP <- as.data.frame(rbind(
   count_12345_in_vector(dat_all_BZ_other_AP$Q8, "other_AP_Q8")))
 
 
+Q6_gender_BLALAP_MF <- as.data.frame(rbind(
+  count_12345_in_vector(dat_all_BZ_males_BL$Q6, "males_BL_Q6"),
+  count_12345_in_vector(dat_all_BZ_females_BL$Q6, "females_BL_Q6"),
+  count_12345_in_vector(dat_all_BZ_males_AL$Q6, "males_AL_Q6"),
+  count_12345_in_vector(dat_all_BZ_females_AL$Q6, "females_AL_Q6"), 
+  count_12345_in_vector(dat_all_BZ_males_AP$Q6, "males_AP_Q6"),
+  count_12345_in_vector(dat_all_BZ_females_AP$Q6, "females_AP_Q6")))
+
+Q7_gender_BLALAP_MF <- as.data.frame(rbind(
+  count_12345_in_vector(dat_all_BZ_males_BL$Q7, "males_BL_Q7"),
+  count_12345_in_vector(dat_all_BZ_females_BL$Q7, "females_BL_Q7"),
+  count_12345_in_vector(dat_all_BZ_males_AL$Q7, "males_AL_Q7"),
+  count_12345_in_vector(dat_all_BZ_females_AL$Q7, "females_AL_Q7"), 
+  count_12345_in_vector(dat_all_BZ_males_AP$Q7, "males_AP_Q7"),
+  count_12345_in_vector(dat_all_BZ_females_AP$Q7, "females_AP_Q7")))
+
+Q8_gender_BLALAP_MF <- as.data.frame(rbind(
+  count_12345_in_vector(dat_all_BZ_males_BL$Q8, "males_BL_Q8"),
+  count_12345_in_vector(dat_all_BZ_females_BL$Q8, "females_BL_Q8"),
+  count_12345_in_vector(dat_all_BZ_males_AL$Q8, "males_AL_Q8"),
+  count_12345_in_vector(dat_all_BZ_females_AL$Q8, "females_AL_Q8"), 
+  count_12345_in_vector(dat_all_BZ_males_AP$Q8, "males_AP_Q8"),
+  count_12345_in_vector(dat_all_BZ_females_AP$Q8, "females_AP_Q8")))
 
 out_height_g = 6
 
@@ -605,6 +628,25 @@ getwd() ## where has my plot gone....?
 
 pdf("Q8_gender_BLALAP_LP.pdf", width = out_width, height = out_height_g)
 plot.likert(Q8_gender_BLALAP, as.percent=TRUE, main = "Insects are boring.", xlim=c(-100,120))
+dev.off()
+getwd() ## where has my plot gone....?
+
+## show MF only 
+
+out_height_g_MF = 4
+
+pdf("Q6_gender_BLALAP_LP_MF.pdf", width = out_width, height = out_height_g_MF)
+plot.likert(Q6_gender_BLALAP_MF, as.percent=TRUE, main = "Insects are disgusting.", xlim=c(-100,120))
+dev.off()
+getwd() ## where has my plot gone....?
+
+pdf("Q7_gender_BLALAP_LP_MF.pdf", width = out_width, height = out_height_g_MF)
+plot.likert(Q7_gender_BLALAP_MF, as.percent=TRUE, main = "I am afraid of insects.", xlim=c(-100,120))
+dev.off()
+getwd() ## where has my plot gone....?
+
+pdf("Q8_gender_BLALAP_LP_MF.pdf", width = out_width, height = out_height_g_MF)
+plot.likert(Q8_gender_BLALAP_MF, as.percent=TRUE, main = "Insects are boring.", xlim=c(-100,120))
 dev.off()
 getwd() ## where has my plot gone....?
 
