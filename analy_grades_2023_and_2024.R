@@ -51,8 +51,11 @@ dat1$MCQ_B_Attempt <- ifelse(dat1$MCQ_B == 0, "No attempt", "Attempted")
 dat1$MCQ_C_Attempt <- ifelse(dat1$MCQ_C == 0, "No attempt", "Attempted")
 dat1$Exam_Attempt  <- ifelse(dat1$Exam == 0 , "No attempt", "Attempted")
 
-
 dat1$Attended_prac_2 <- ifelse(dat1$Attended_prac == "NO_OSstudent", "NO", dat1$Attended_prac)
+
+dat1_202220232024 <- subset(dat1, dat1$year %in% c("2022", "2023", "2024"))
+levels(as.factor(dat1$year))
+levels(as.factor(dat1_202220232024$year))
 
 
 dat2 <- as.data.frame(cbind(
@@ -120,6 +123,41 @@ ggplot(dat1 , aes(as.factor(year), MCQ_C)) +
   geom_boxplot(aes(fill = factor(Attended_prac_2)), position = position_dodge2(preserve = "single")) +
   scale_fill_manual(values=c("NO" = "#56B4E9" , "YES" =  "#E69F00" , "No_prac"  = "grey")) 
 dev.off()
+
+# without 2020 and 2021
+
+
+P1_MCQCa <- ggplot(dat1_202220232024 , aes(as.factor(year), MCQ_C)) + 
+  theme_bw() +
+  geom_boxplot(aes(fill = factor(Attended_prac_2)), position = position_dodge2(preserve = "single")) +
+  scale_fill_manual(values=c("NO" = "#56B4E9" , "YES" =  "#E69F00" , "No_prac"  = "grey")) + 
+  theme(legend.position = "none") + xlab("Year") + ylab("Score on MCQ C") + ylim(c(0, 105))
+
+P2_MCQCa <- ggplot(dat1_202220232024 , aes(as.factor(year), exam_MCQC_delta)) + 
+  theme_bw() +
+  geom_boxplot(aes(fill = factor(Attended_prac_2)), position = position_dodge2(preserve = "single")) +
+  scale_fill_manual(values=c("NO" = "#56B4E9" , "YES" =  "#E69F00" , "No_prac"  = "grey")) + 
+  theme(legend.position = "none") + xlab("Year") + ylab("Relative score on MCQ C")
+
+P3_MCQCa <-ggplot(dat1_202220232024 , aes(as.factor(year), MCQA_MCQC_delta)) + 
+  theme_bw() +
+  geom_boxplot(aes(fill = factor(Attended_prac_2)), position = position_dodge2(preserve = "single")) +
+  scale_fill_manual(values=c("NO" = "#56B4E9" , "YES" =  "#E69F00" , "No_prac"  = "grey")) + 
+  theme(legend.position = "none") + xlab("Year") + ylab("Relative score on MCQ C")
+
+pdf("grades_Attended_prac_2a.pdf", width = 7, height = 10)
+plot_grid(P1_MCQCa, P2_MCQCa, P3_MCQCa, ncol = 1)
+dev.off()
+
+pdf("grades_legend_Attended_prac_2a.pdf", width = 7, height = 3.3)
+ggplot(dat1_202220232024 , aes(as.factor(year), MCQ_C)) + 
+  theme_bw() +
+  geom_boxplot(aes(fill = factor(Attended_prac_2)), position = position_dodge2(preserve = "single")) +
+  scale_fill_manual(values=c("NO" = "#56B4E9" , "YES" =  "#E69F00" , "No_prac"  = "grey")) 
+dev.off()
+
+
+
 
 
 #### wilcox
@@ -368,6 +406,30 @@ ncol = 2)
 dev.off()
 
 
+#### without 2020. 2021
+
+Fail_pass_N_df_l_20220232024 <- subset(Fail_pass_N_df_l, Fail_pass_N_df_l$year %in% c("2022", "2023", "2024"))
+
+pdf("fails_20220232024.pdf", width = 8, height = 6)
+plot_grid(
+  ggplot(subset(Fail_pass_N_df_l_20220232024, Fail_pass_N_df_l_20220232024$assessment == "MCQ_A") , aes(x = factor(assessment_year_o), y = fail_per, fill = attendence))+ 
+    geom_bar(position=position_dodge2(preserve = "single"),stat="identity", lwd = 1) + 
+    theme_bw() + ylim(0, max(Fail_pass_N_df_l$fail_per * 1.02)) + scale_fill_manual(values=c("abs" = "#56B4E9" , "att" =  "#E69F00" , "No_prac"  = "grey")),
+  
+  ggplot(subset(Fail_pass_N_df_l_20220232024, Fail_pass_N_df_l_20220232024$assessment == "MCQ_B") , aes(x = factor(assessment_year_o), y = fail_per, fill = attendence))+ 
+    geom_bar(position=position_dodge2(preserve = "single"),stat="identity", lwd = 1) + 
+    theme_bw() + ylim(0, max(Fail_pass_N_df_l$fail_per * 1.02)) + scale_fill_manual(values=c("abs" = "#56B4E9" , "att" =  "#E69F00" , "No_prac"  = "grey")),   
+  
+  ggplot(subset(Fail_pass_N_df_l_20220232024, Fail_pass_N_df_l_20220232024$assessment == "MCQ_C") , aes(x = factor(assessment_year_o), y = fail_per, fill = attendence))+ 
+    geom_bar(position=position_dodge2(preserve = "single"),stat="identity", lwd = 1) + 
+    theme_bw() + ylim(0, max(Fail_pass_N_df_l$fail_per * 1.02)) + scale_fill_manual(values=c("abs" = "#56B4E9" , "att" =  "#E69F00" , "No_prac"  = "grey")) ,  
+  
+  ggplot(subset(Fail_pass_N_df_l_20220232024, Fail_pass_N_df_l_20220232024$assessment == "Exam") , aes(x = factor(assessment_year_o), y = fail_per, fill = attendence))+ 
+    geom_bar(position=position_dodge2(preserve = "single"),stat="identity", lwd = 1) + 
+    theme_bw() + ylim(0, max(Fail_pass_N_df_l$fail_per * 1.02)) + scale_fill_manual(values=c("abs" = "#56B4E9" , "att" =  "#E69F00" , "No_prac"  = "grey")),
+  ncol = 2)
+dev.off()
+
 
 
 ####### more likely to attempt MCQC?
@@ -463,4 +525,18 @@ ggplot(Attempt_pass_N_df_l , aes(x = factor(assessment_year_o), y = No_attempt_p
   geom_bar(position=position_dodge2(preserve = "single"),stat="identity", lwd = 1) + 
   theme_bw() + ylim(0, max(Attempt_pass_N_df_l$No_attempt_per * 1.02)) + scale_fill_manual(values=c("abs" = "#56B4E9" , "att" =  "#E69F00" , "No_prac"  = "grey"))
 dev.off()
+
+#### without 2020. 2021
+
+Attempt_pass_N_df_l_20220232024 <- subset(Attempt_pass_N_df_l, Attempt_pass_N_df_l$year %in% c("2022", "2023", "2024"))
+
+pdf("Attempts_20220232024.pdf", width = 4, height = 3)
+ggplot(Attempt_pass_N_df_l_20220232024 , aes(x = factor(assessment_year_o), y = No_attempt_per, fill = attendence))+ 
+  geom_bar(position=position_dodge2(preserve = "single"),stat="identity", lwd = 1) + 
+  theme_bw() + ylim(0, max(Attempt_pass_N_df_l$No_attempt_per * 1.02)) + scale_fill_manual(values=c("abs" = "#56B4E9" , "att" =  "#E69F00" , "No_prac"  = "grey"))
+dev.off()
+
+
+
+
 
