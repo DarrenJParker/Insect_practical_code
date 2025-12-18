@@ -99,6 +99,12 @@ dat2$year <- rep("2024", length(dat2[,1]))
 #### join
 dat_all <- rbind(dat1, dat2)
 
+
+### filter out non BZ
+dat_all <- subset(dat_all, dat_all$degree_type == "BZ")
+length(dat_all [,1])
+
+
 ############################################################################################################################
 ## get rid of decimals (turn to NA - there are not many) 
 ## this is when students filled in two circles.
@@ -110,14 +116,14 @@ dat_all_AP_temp <- subset(dat_all, dat_all$session =="After_prac")
 table(c(dat_all$Q1, dat_all$Q2, dat_all$Q2, dat_all$Q3, dat_all$Q4, dat_all$Q5, dat_all$Q6, dat_all$Q7, dat_all$Q8, dat_all$Q9, dat_all$Q10, dat_all$Q11, dat_all$Q12, dat_all$Q13))
 
 sum(table(c(dat_all$Q1, dat_all$Q2, dat_all$Q2, dat_all$Q3, dat_all$Q4, dat_all$Q5, dat_all$Q6, dat_all$Q7, dat_all$Q8, dat_all$Q9, dat_all$Q10, dat_all$Q11, dat_all$Q12, dat_all$Q13)))
-#[1] 15956
+#[1] 12891
 
 sum(is.na((c(dat_all_BL_temp$Q1, dat_all_BL_temp$Q2, dat_all_BL_temp$Q2, dat_all_BL_temp$Q3, dat_all_BL_temp$Q4, dat_all_BL_temp$Q5, dat_all_BL_temp$Q6, dat_all_BL_temp$Q7, dat_all_BL_temp$Q8, dat_all_BL_temp$Q9, dat_all_BL_temp$Q10, dat_all_BL_temp$Q11,
              dat_all_AL_temp$Q1, dat_all_AL_temp$Q2, dat_all_AL_temp$Q2, dat_all_AL_temp$Q3, dat_all_AL_temp$Q4, dat_all_AL_temp$Q5, dat_all_AL_temp$Q6, dat_all_AL_temp$Q7, dat_all_AL_temp$Q8, dat_all_AL_temp$Q9, dat_all_AL_temp$Q10, dat_all_AL_temp$Q11,
              dat_all_AP_temp$Q1, dat_all_AP_temp$Q2, dat_all_AP_temp$Q2, dat_all_AP_temp$Q3, dat_all_AP_temp$Q4, dat_all_AP_temp$Q5, dat_all_AP_temp$Q6, dat_all_AP_temp$Q7, dat_all_AP_temp$Q8, dat_all_AP_temp$Q9, dat_all_AP_temp$Q10, dat_all_AP_temp$Q11, dat_all_AP_temp$Q12, dat_all_AP_temp$Q13
 ))))
 
-## 46 = number of NA responses 
+## 27 = number of NA responses 
 
 dat_all$Q1  <- ifelse(dat_all$Q1%%1==0,  dat_all$Q1, NA)
 dat_all$Q2  <- ifelse(dat_all$Q2%%1==0,  dat_all$Q2, NA)
@@ -144,14 +150,13 @@ sum(is.na((c(dat_all_BL_temp$Q1, dat_all_BL_temp$Q2, dat_all_BL_temp$Q2, dat_all
              dat_all_AP_temp$Q1, dat_all_AP_temp$Q2, dat_all_AP_temp$Q2, dat_all_AP_temp$Q3, dat_all_AP_temp$Q4, dat_all_AP_temp$Q5, dat_all_AP_temp$Q6, dat_all_AP_temp$Q7, dat_all_AP_temp$Q8, dat_all_AP_temp$Q9, dat_all_AP_temp$Q10, dat_all_AP_temp$Q11, dat_all_AP_temp$Q12, dat_all_AP_temp$Q13
 ))))
 
-## 70
-## 70 - 46 = 24 = number of decimal answers
+## 45
+## 45 - 27 = 18 = number of decimal answers
 
 
-### filter out non BZ
-dat_all_BZ <- subset(dat_all, dat_all$degree_type == "BZ")
-length(dat_all [,1])
-length(dat_all_BZ[,1])
+### rename df
+dat_all_BZ <- dat_all
+
 
 
 ### degree tidy
