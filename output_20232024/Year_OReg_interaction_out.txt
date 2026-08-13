@@ -1,0 +1,88 @@
+Q1
+Wald test
+
+Model 1: score ~ year + session
+Model 2: score ~ year * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1   1002                     
+2   1000  2 0.1213     0.9412
+Q2
+Wald test
+
+Model 1: score ~ year + session
+Model 2: score ~ year * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1   1002                     
+2   1000  2 0.6602     0.7189
+Q3
+Wald test
+
+Model 1: score ~ year + session
+Model 2: score ~ year * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1    998                     
+2    996  2 0.8456     0.6552
+Q4
+Wald test
+
+Model 1: score ~ year + session
+Model 2: score ~ year * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1   1004                     
+2   1002  2 2.6921     0.2603
+Q5
+Wald test
+
+Model 1: score ~ year + session
+Model 2: score ~ year * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1   1002                     
+2   1000  2 0.8775     0.6449
+Q6
+Wald test
+
+Model 1: score ~ year + session
+Model 2: score ~ year * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1   1002                     
+2   1000  2 2.9835      0.225
+Q7
+Wald test
+
+Model 1: score ~ year + session
+Model 2: score ~ year * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1   1003                     
+2   1001  2 1.1331     0.5675
+Q8
+Wald test
+
+Model 1: score ~ year + session
+Model 2: score ~ year * session
+  Res.Df Df Chisq Pr(>Chisq)
+1   1003                    
+2   1001  2 1.643     0.4398
+Q9
+Wald test
+
+Model 1: score ~ year + session
+Model 2: score ~ year * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1    996                     
+2    994  2 1.9239     0.3822
+Q10
+Wald test
+
+Model 1: score ~ year + session
+Model 2: score ~ year * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1   1001                     
+2    999  2 3.9098     0.1416
+Q11
+Wald test
+
+Model 1: score ~ year + session
+Model 2: score ~ year * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1   1005                     
+2   1003  2 0.8362     0.6583

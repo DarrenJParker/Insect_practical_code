@@ -1,0 +1,95 @@
+Q1
+Wald test
+
+Model 1: score ~ gender + session
+Model 2: score ~ gender * session
+  Res.Df Df  Chisq Pr(>Chisq)  
+1    894                       
+2    892  2 8.5419    0.01397 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Q2
+Wald test
+
+Model 1: score ~ gender + session
+Model 2: score ~ gender * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1    895                     
+2    893  2 0.4084     0.8153
+Q3
+Wald test
+
+Model 1: score ~ gender + session
+Model 2: score ~ gender * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1    890                     
+2    888  2 0.7664     0.6817
+Q4
+Wald test
+
+Model 1: score ~ gender + session
+Model 2: score ~ gender * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1    896                     
+2    894  2 0.5033     0.7775
+Q5
+Wald test
+
+Model 1: score ~ gender + session
+Model 2: score ~ gender * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1    894                     
+2    892  2 0.0196     0.9902
+Q6
+Wald test
+
+Model 1: score ~ gender + session
+Model 2: score ~ gender * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1    894                     
+2    892  2 1.4572     0.4826
+Q7
+Wald test
+
+Model 1: score ~ gender + session
+Model 2: score ~ gender * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1    895                     
+2    893  2 1.8064     0.4053
+Q8
+Wald test
+
+Model 1: score ~ gender + session
+Model 2: score ~ gender * session
+  Res.Df Df Chisq Pr(>Chisq)
+1    895                    
+2    893  2 1.208     0.5466
+Q9
+Wald test
+
+Model 1: score ~ gender + session
+Model 2: score ~ gender * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1    888                     
+2    886  2 2.2123     0.3308
+Q10
+Wald test
+
+Model 1: score ~ gender + session
+Model 2: score ~ gender * session
+  Res.Df Df  Chisq Pr(>Chisq)
+1    894                     
+2    892  2 2.1423     0.3426
+Q11
+Wald test
+
+Model 1: score ~ gender + session
+Model 2: score ~ gender * session
+  Res.Df Df  Chisq Pr(>Chisq)  
+1    897                       
+2    895  2 5.5613      0.062 .
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+FDR vals:
+ [1] 0.1536700 0.8968300 0.8968300 0.8968300 0.9902000 0.8589429 0.8589429 0.8589429 0.8589429
+[10] 0.8589429 0.3410000

@@ -1,6 +1,7 @@
 library(ggplot2)
 library(stringr)
 library(cowplot)
+library(rstatix)
 setwd("output_20232024")
 
 ### NO_OSstudent == is for OS and ES students (all non-biozoo!)
@@ -54,8 +55,10 @@ dat1$Exam_Attempt  <- ifelse(dat1$Exam == 0 , "No attempt", "Attempted")
 dat1$Attended_prac_2 <- ifelse(dat1$Attended_prac == "NO_OSstudent", "NO", dat1$Attended_prac)
 
 dat1_202220232024 <- subset(dat1, dat1$year %in% c("2022", "2023", "2024"))
+dat1_202220232024$year <- as.factor(dat1_202220232024$year)
 levels(as.factor(dat1$year))
 levels(as.factor(dat1_202220232024$year))
+
 
 
 dat2 <- as.data.frame(cbind(
@@ -191,6 +194,42 @@ MCQC_wilcox$V4 <-  p.adjust(MCQC_wilcox$V3)
 colnames(MCQC_wilcox ) <- c("Year", "test", "wilcox_p", "wilcox_FDR")
 write.csv(MCQC_wilcox, "MCQC_wilcox_Attended_prac_2.csv")
 
+
+
+#### FAILS LR
+
+colnames(dat1_202220232024)
+
+
+### make a factor for previous experience (if pass A and B == 2, A or B = 1, neither = 0 )
+dat1_202220232024$MCQ_A_fail_01s <- as.numeric(ifelse(dat1_202220232024$MCQ_A_fail == "Pass", 1,
+                                                      ifelse(dat1_202220232024$MCQ_A_fail == "Fail", 0, dat1_202220232024$MCQ_A_fail)))
+
+dat1_202220232024$MCQ_B_fail_01s <- as.numeric(ifelse(dat1_202220232024$MCQ_B_fail == "Pass", 1,
+                                                      ifelse(dat1_202220232024$MCQ_B_fail == "Fail", 0, dat1_202220232024$MCQ_B_fail)))
+
+dat1_202220232024$MCQ_AB_fail_factor <- as.factor(dat1_202220232024$MCQ_A_fail_01s + dat1_202220232024$MCQ_B_fail_01s)
+
+
+### make 0 1 for log reg
+dat1_202220232024$MCQ_C_fail_01s <- as.numeric(ifelse(dat1_202220232024$MCQ_C_fail == "Pass", 1,
+                                           ifelse(dat1_202220232024$MCQ_C_fail == "Fail", 0, dat1_202220232024$MCQ_C_fail)))
+
+
+dat1_202220232024$Exam_fail_01s <- as.numeric(ifelse(dat1_202220232024$Exam_fail == "Pass", 1,
+                                                     ifelse(dat1_202220232024$Exam_fail == "Fail", 0, dat1_202220232024$Exam_fail)))
+
+### logR
+
+
+LR_MCQ_C <- glm(MCQ_C_fail_01s ~ Attended_prac_2 * year + MCQ_AB_fail_factor , family = binomial (link=logit), data = dat1_202220232024)
+drop1(LR_MCQ_C, ~., test="Chisq")
+
+writeLines(capture.output(drop1(LR_MCQ_C, ~., test="Chisq")), "LR_MCQ_C_out.txt")
+
+# LR_Exam  <- glm(Exam_fail_01s ~ Attended_prac_2 * year + MCQ_AB_fail_factor , family = binomial (link=logit), data = dat1_202220232024)
+# drop1(LR_Exam, ~., test="Chisq")
+# writeLines(capture.output(drop1(LR_Exam, ~., test="Chisq")), "LR_Exam_out.txt")
 
 #### FAILS
 
@@ -430,14 +469,58 @@ plot_grid(
   ncol = 2)
 dev.off()
 
-
-
 ####### more likely to attempt MCQC?
 
 
+colnames(dat1_202220232024)
+
+### make a factor for previous experience (if attempt A and B == 2, A or B = 1, neither = 0 )
+dat1_202220232024$MCQ_A_Attempt_01s <- as.numeric(ifelse(dat1_202220232024$MCQ_A_Attempt == "Attempted", 1,
+                                                         ifelse(dat1_202220232024$MCQ_A_Attempt == "No attempt", 0, dat1_202220232024$MCQ_A_Attempt)))
+
+dat1_202220232024$MCQ_B_Attempt_01s <- as.numeric(ifelse(dat1_202220232024$MCQ_B_Attempt == "Attempted", 1,
+                                                         ifelse(dat1_202220232024$MCQ_B_Attempt == "No attempt", 0, dat1_202220232024$MCQ_B_Attempt)))
+
+dat1_202220232024$MCQ_AB_Attempt_factor <- as.factor(dat1_202220232024$MCQ_A_Attempt_01s + dat1_202220232024$MCQ_B_Attempt_01s)
 
 
-#### AttemptS
+### make 0 1 for log reg
+dat1_202220232024$MCQ_C_Attempt_01s <- as.numeric(ifelse(dat1_202220232024$MCQ_C_Attempt == "Attempted", 1,
+                                                         ifelse(dat1_202220232024$MCQ_C_Attempt == "No attempt", 0, dat1_202220232024$MCQ_C_Attempt)))
+
+
+dat1_202220232024$Exam_Attempt_01s <- as.numeric(ifelse(dat1_202220232024$Exam_Attempt == "Attempted", 1,
+                                                        ifelse(dat1_202220232024$Exam_Attempt == "No attempt", 0, dat1_202220232024$Exam_Attempt)))
+
+
+
+str(dat1_202220232024)
+
+
+### logR
+#LR_MCQ_C_attempt <- glm(MCQ_C_Attempt_01s ~ Attended_prac_2 * year + MCQ_AB_Attempt_factor , family = binomial (link=logit), data = dat1_202220232024) ### can't fit interaction (glm.fit: fitted probabilities numerically 0 or 1 occurred) - but giives same result for attended prac without it
+LR_MCQ_C_attempt <- glm(MCQ_C_Attempt_01s ~ Attended_prac_2 + year + MCQ_AB_Attempt_factor , family = binomial (link=logit), data = dat1_202220232024) ### can't fit interaction (glm.fit: fitted probabilities numerically 0 or 1 occurred) - but giives same result for attended prac without it
+drop1(LR_MCQ_C_attempt, ~., test="Chisq")
+
+#### fails excluding students that did not attempt MCQC
+
+dat1_202220232024_attemptedC <- subset(dat1_202220232024, dat1_202220232024$MCQ_C_Attempt == "Attempted")
+LR_MCQ_C_attemptedC <- glm(MCQ_C_fail_01s ~ Attended_prac_2 * year + MCQ_AB_fail_factor , family = binomial (link=logit), data = dat1_202220232024_attemptedC)
+drop1(LR_MCQ_C_attemptedC, ~., test="Chisq")
+
+
+#### fails excluding students that did not attempt the previous ones and MCQ C
+
+dat1_202220232024$MCQABC_attempted <- paste(dat1_202220232024$MCQ_A_Attempt, dat1_202220232024$MCQ_B_Attempt, dat1_202220232024$MCQ_C_Attempt, sep = "_") 
+dat1_202220232024_attempted <- subset(dat1_202220232024, dat1_202220232024$MCQABC_attempted == "Attempted_Attempted_Attempted")
+LR_MCQ_C_attemptedABC <- glm(MCQ_C_fail_01s ~ Attended_prac_2 * year + MCQ_AB_fail_factor , family = binomial (link=logit), data = dat1_202220232024_attempted)
+drop1(LR_MCQ_C_attemptedABC , ~., test="Chisq")
+
+writeLines(capture.output(drop1(LR_MCQ_C_attempt, ~., test="Chisq")), "LR_MCQ_C_attempt_out.txt")
+writeLines(capture.output(drop1(LR_MCQ_C_attemptedC, ~., test="Chisq")), "LR_MCQ_C_attemptedMCQC_out.txt")
+writeLines(capture.output(drop1(LR_MCQ_C_attemptedABC , ~., test="Chisq")), "LR_MCQ_C_attemptedMCQABC_out.txt")
+
+#### AttemptS Fisher tests
 
 
 FT_Attempt_df <- as.data.frame(cbind(
@@ -539,4 +622,63 @@ dev.off()
 
 
 
+##################################################################################################
+################# effect sizes with bootstapped CIs
+
+#### overall effect size 
+
+use_seed = 42
+N_boot = 5000
+set.seed(use_seed )
+
+MCQ_C_fail_01_overall_effectsize <- as.data.frame(cohens_d(
+  data = dat1_202220232024, 
+  formula = MCQ_C_fail_01s ~ Attended_prac_2, 
+  paired = FALSE,
+  ci = TRUE, 
+  nboot = N_boot, 
+  ci.type = "perc"
+))
+set.seed(use_seed )
+MCQ_C_attempted_overall_effectsize <- as.data.frame(cohens_d(
+  data = dat1_202220232024, 
+  formula = MCQ_C_Attempt_01s ~ Attended_prac_2, 
+  paired = FALSE,
+  ci = TRUE, 
+  nboot = N_boot, 
+  ci.type = "perc"
+))
+set.seed(use_seed )
+MCQ_C_fail_01_overall_effectsize_attemptedABC <- as.data.frame(cohens_d(
+  data = dat1_202220232024_attempted, 
+  formula = MCQ_C_fail_01s ~ Attended_prac_2, 
+  paired = FALSE,
+  ci = TRUE, 
+  nboot = N_boot, 
+  ci.type = "perc"
+))
+set.seed(use_seed )
+MCQ_C_fail_01_overall_effectsize_attemptedC <- as.data.frame(cohens_d(
+  data = dat1_202220232024_attemptedC, 
+  formula = MCQ_C_fail_01s ~ Attended_prac_2, 
+  paired = FALSE,
+  ci = TRUE, 
+  nboot = N_boot, 
+  ci.type = "perc"
+))
+
+MCQC_effectsizes <- as.data.frame(rbind(
+  MCQ_C_fail_01_overall_effectsize,
+  MCQ_C_attempted_overall_effectsize,
+  MCQ_C_fail_01_overall_effectsize_attemptedABC,
+  MCQ_C_fail_01_overall_effectsize_attemptedC
+))
+
+MCQC_effectsizes$comp <- c(  "MCQ_C_fail_01_overall_effectsize",
+                             "MCQ_C_attempted_overall_effectsize",
+                             "MCQ_C_fail_01_overall_effectsize_attemptedABC",
+                             "MCQ_C_fail_01_overall_effectsize_attemptedC")
+
+
+write.csv(MCQC_effectsizes, paste("MCQC_effectsizes", N_boot, "seed", use_seed, ".csv", sep = ""))
 

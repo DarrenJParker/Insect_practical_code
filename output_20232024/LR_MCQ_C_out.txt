@@ -1,0 +1,12 @@
+Single term deletions
+
+Model:
+MCQ_C_fail_01s ~ Attended_prac_2 * year + MCQ_AB_fail_factor
+                     Df Deviance    AIC     LRT  Pr(>Chi)    
+<none>                    258.09 274.09                      
+Attended_prac_2       1   264.21 278.21  6.1189   0.01337 *  
+year                  2   261.12 273.12  3.0327   0.21951    
+MCQ_AB_fail_factor    2   288.69 300.69 30.6027 2.263e-07 ***
+Attended_prac_2:year  2   263.36 275.36  5.2688   0.07176 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

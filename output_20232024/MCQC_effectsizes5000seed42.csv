@@ -1,0 +1,5 @@
+"",".y.","group1","group2","effsize","n1","n2","conf.low","conf.high","magnitude","comp"
+"1","MCQ_C_fail_01s","NO","YES",-0.288376674538015,162,676,-0.44,-0.12,"small","MCQ_C_fail_01_overall_effectsize"
+"2","MCQ_C_Attempt_01s","NO","YES",-0.265002349544004,162,676,-0.41,-0.09,"small","MCQ_C_attempted_overall_effectsize"
+"3","MCQ_C_fail_01s","NO","YES",-0.15564781000095,138,624,-0.3,0.07,"negligible","MCQ_C_fail_01_overall_effectsize_attemptedABC"
+"4","MCQ_C_fail_01s","NO","YES",-0.11984583619703,149,661,-0.27,0.08,"negligible","MCQ_C_fail_01_overall_effectsize_attemptedC"

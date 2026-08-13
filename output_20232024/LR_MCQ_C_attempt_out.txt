@@ -1,0 +1,11 @@
+Single term deletions
+
+Model:
+MCQ_C_Attempt_01s ~ Attended_prac_2 + year + MCQ_AB_Attempt_factor
+                      Df Deviance    AIC     LRT  Pr(>Chi)    
+<none>                     205.99 217.99                      
+Attended_prac_2        1   217.65 227.65 11.6528 0.0006411 ***
+year                   2   212.54 220.54  6.5426 0.0379580 *  
+MCQ_AB_Attempt_factor  2   224.43 232.43 18.4405 9.901e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

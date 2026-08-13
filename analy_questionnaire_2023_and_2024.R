@@ -1,12 +1,21 @@
 library(ggplot2)
 library(stringr)
 library(cowplot)
-#install.packages("HH")
 library("HH")
+library(ordinal)
+library(rstatix)
+library(sandwich)
+library(lmtest)   
+library(emmeans)
+
+sessionInfo()
+
+Nboot = 50 ## set to 5000 for full run (it takes a long time though!)
 
 #####################################################################################
 ###### data #########################################################################
 
+getwd()
 dir.create("output_20232024")
 setwd("output_20232024")
 
@@ -99,12 +108,6 @@ dat2$year <- rep("2024", length(dat2[,1]))
 #### join
 dat_all <- rbind(dat1, dat2)
 
-
-### filter out non BZ
-dat_all <- subset(dat_all, dat_all$degree_type == "BZ")
-length(dat_all [,1])
-
-
 ############################################################################################################################
 ## get rid of decimals (turn to NA - there are not many) 
 ## this is when students filled in two circles.
@@ -116,14 +119,14 @@ dat_all_AP_temp <- subset(dat_all, dat_all$session =="After_prac")
 table(c(dat_all$Q1, dat_all$Q2, dat_all$Q2, dat_all$Q3, dat_all$Q4, dat_all$Q5, dat_all$Q6, dat_all$Q7, dat_all$Q8, dat_all$Q9, dat_all$Q10, dat_all$Q11, dat_all$Q12, dat_all$Q13))
 
 sum(table(c(dat_all$Q1, dat_all$Q2, dat_all$Q2, dat_all$Q3, dat_all$Q4, dat_all$Q5, dat_all$Q6, dat_all$Q7, dat_all$Q8, dat_all$Q9, dat_all$Q10, dat_all$Q11, dat_all$Q12, dat_all$Q13)))
-#[1] 12891
+#[1] 15956
 
 sum(is.na((c(dat_all_BL_temp$Q1, dat_all_BL_temp$Q2, dat_all_BL_temp$Q2, dat_all_BL_temp$Q3, dat_all_BL_temp$Q4, dat_all_BL_temp$Q5, dat_all_BL_temp$Q6, dat_all_BL_temp$Q7, dat_all_BL_temp$Q8, dat_all_BL_temp$Q9, dat_all_BL_temp$Q10, dat_all_BL_temp$Q11,
              dat_all_AL_temp$Q1, dat_all_AL_temp$Q2, dat_all_AL_temp$Q2, dat_all_AL_temp$Q3, dat_all_AL_temp$Q4, dat_all_AL_temp$Q5, dat_all_AL_temp$Q6, dat_all_AL_temp$Q7, dat_all_AL_temp$Q8, dat_all_AL_temp$Q9, dat_all_AL_temp$Q10, dat_all_AL_temp$Q11,
              dat_all_AP_temp$Q1, dat_all_AP_temp$Q2, dat_all_AP_temp$Q2, dat_all_AP_temp$Q3, dat_all_AP_temp$Q4, dat_all_AP_temp$Q5, dat_all_AP_temp$Q6, dat_all_AP_temp$Q7, dat_all_AP_temp$Q8, dat_all_AP_temp$Q9, dat_all_AP_temp$Q10, dat_all_AP_temp$Q11, dat_all_AP_temp$Q12, dat_all_AP_temp$Q13
 ))))
 
-## 27 = number of NA responses 
+## 46 = number of NA responses 
 
 dat_all$Q1  <- ifelse(dat_all$Q1%%1==0,  dat_all$Q1, NA)
 dat_all$Q2  <- ifelse(dat_all$Q2%%1==0,  dat_all$Q2, NA)
@@ -150,13 +153,14 @@ sum(is.na((c(dat_all_BL_temp$Q1, dat_all_BL_temp$Q2, dat_all_BL_temp$Q2, dat_all
              dat_all_AP_temp$Q1, dat_all_AP_temp$Q2, dat_all_AP_temp$Q2, dat_all_AP_temp$Q3, dat_all_AP_temp$Q4, dat_all_AP_temp$Q5, dat_all_AP_temp$Q6, dat_all_AP_temp$Q7, dat_all_AP_temp$Q8, dat_all_AP_temp$Q9, dat_all_AP_temp$Q10, dat_all_AP_temp$Q11, dat_all_AP_temp$Q12, dat_all_AP_temp$Q13
 ))))
 
-## 45
-## 45 - 27 = 18 = number of decimal answers
+## 70
+## 70 - 46 = 24 = number of decimal answers
 
 
-### rename df
-dat_all_BZ <- dat_all
-
+### filter out non BZ
+dat_all_BZ <- subset(dat_all, dat_all$degree_type == "BZ")
+length(dat_all [,1])
+length(dat_all_BZ[,1])
 
 
 ### degree tidy
@@ -223,7 +227,7 @@ length(dat_all_BZ_BL[,1])
 length(dat_all_BZ_AL[,1])
 length(dat_all_BZ_AP[,1])
 
-
+### not needed as ordinal data
 shapiro_results <- as.data.frame(cbind(
   c(shapiro.test(dat_all_BZ_BL$Q1)$p,  shapiro.test(dat_all_BZ_AL$Q1)$p,  shapiro.test(dat_all_BZ_AP$Q1)$p,
     shapiro.test(dat_all_BZ_BL$Q2)$p,  shapiro.test(dat_all_BZ_AL$Q2)$p,  shapiro.test(dat_all_BZ_AP$Q2)$p,
@@ -500,61 +504,309 @@ dev.off()
 getwd() ## where has my plot gone....?
 
 
-wilcox_test_tests_wFDR <- function(BL_v, AL_v, AP_v, Q){
 
-  WT_BL_v_AL_v <- wilcox.test(BL_v, AL_v)
-  WT_BL_v_AP_v <- wilcox.test(BL_v, AP_v)
-  WT_AL_v_AP_v <- wilcox.test(AL_v, AP_v)
+#####################################################################################################################
+##### USE ordinal logistic regression with robust standard errors to deal with the the fact I have mostly repeated-measures data but no way of tracking it as all questionnaires were anonomysed.
+##### If I use basic wilcoxon I will inflate the false positives if students give more similar answers than expected for independent students
+##### Will do all Qs sep, then emmeans, then FDR correct across all Qs.
+
+OLR_tests <- function(BL_v, AL_v, AP_v, Q){
+  Q_df <- as.data.frame(cbind(
+    c(BL_v, AL_v, AP_v),
+    c(rep("BL", length(BL_v)), rep("AL", length(AL_v)), rep("AP", length(AP_v)))))
+    
+  colnames(Q_df) <- c("score", "session")
+  Q_df$score    <- ordered(Q_df$score, levels = c(1, 2, 3, 4, 5))
+  Q_df$session  <- as.factor(Q_df$session)
   
-  print( WT_BL_v_AL_v)
-  print( WT_BL_v_AP_v)
-  print( WT_AL_v_AP_v)
+  model_Q <- clm(score ~ session, data = Q_df)
+
+  #### Robust standard errors (Huber-White Sandwich Estimator)
+  Q_robust_vcov    <- sandwich(model_Q)
+  Q_robust_results <- coeftest(model_Q, vcov. = Q_robust_vcov)
+  ## pairwise using the robust matrix
+  Q_robust_matrix   <- as.matrix(Q_robust_vcov)
+  Q_session_emmeans <- emmeans(model_Q, ~ session, vcov. = Q_robust_matrix)
+
+  Q_pairs_result <- as.data.frame(pairs(Q_session_emmeans, adjust = "none")) ### no adjust here as adjust with all Qs
+  Q_pairs_result$Q <- c(Q,Q,Q)
   
-  stats_table <- as.data.frame(cbind(
-    c(Q,Q,Q),
-    c("BLvAL", "BLvAP", "ALvAP"),
-    c(WT_BL_v_AL_v$p.value, WT_BL_v_AP_v$p.value, WT_AL_v_AP_v$p.value)))
-  
-  colnames(stats_table) <- c("Q", "comp", "p")
-  
-  stats_table$FDR <- p.adjust(stats_table$p, method = "fdr")
-  
-  return(stats_table)
-  
+  return(Q_pairs_result)
 }
 
-dat_all_BZ_all_stats <- rbind(
-  wilcox_test_tests_wFDR(dat_all_BZ_BL$Q1,  dat_all_BZ_AL$Q1,  dat_all_BZ_AP$Q1, " Q1"),
-  wilcox_test_tests_wFDR(dat_all_BZ_BL$Q2,  dat_all_BZ_AL$Q2,  dat_all_BZ_AP$Q2,  "Q2"),
-  wilcox_test_tests_wFDR(dat_all_BZ_BL$Q3,  dat_all_BZ_AL$Q3,  dat_all_BZ_AP$Q3,  "Q3"),
-  wilcox_test_tests_wFDR(dat_all_BZ_BL$Q4,  dat_all_BZ_AL$Q4,  dat_all_BZ_AP$Q4,  "Q4"),
-  wilcox_test_tests_wFDR(dat_all_BZ_BL$Q5,  dat_all_BZ_AL$Q5,  dat_all_BZ_AP$Q5,  "Q5"),
-  wilcox_test_tests_wFDR(dat_all_BZ_BL$Q6,  dat_all_BZ_AL$Q6,  dat_all_BZ_AP$Q6,  "Q6"),
-  wilcox_test_tests_wFDR(dat_all_BZ_BL$Q7,  dat_all_BZ_AL$Q7,  dat_all_BZ_AP$Q7,  "Q7"),
-  wilcox_test_tests_wFDR(dat_all_BZ_BL$Q8,  dat_all_BZ_AL$Q8,  dat_all_BZ_AP$Q8,  "Q8"),
-  wilcox_test_tests_wFDR(dat_all_BZ_BL$Q9,  dat_all_BZ_AL$Q9,  dat_all_BZ_AP$Q9,  "Q9"),
-  wilcox_test_tests_wFDR(dat_all_BZ_BL$Q10, dat_all_BZ_AL$Q10, dat_all_BZ_AP$Q10, "Q10"),
-  wilcox_test_tests_wFDR(dat_all_BZ_BL$Q11, dat_all_BZ_AL$Q11, dat_all_BZ_AP$Q11, "Q11"))
+dat_all_BZ_all_OLRout <- rbind(
+  OLR_tests(dat_all_BZ_BL$Q1,  dat_all_BZ_AL$Q1,  dat_all_BZ_AP$Q1,  "Q1"),
+  OLR_tests(dat_all_BZ_BL$Q2,  dat_all_BZ_AL$Q2,  dat_all_BZ_AP$Q2,  "Q2"),
+  OLR_tests(dat_all_BZ_BL$Q3,  dat_all_BZ_AL$Q3,  dat_all_BZ_AP$Q3,  "Q3"),
+  OLR_tests(dat_all_BZ_BL$Q4,  dat_all_BZ_AL$Q4,  dat_all_BZ_AP$Q4,  "Q4"),
+  OLR_tests(dat_all_BZ_BL$Q5,  dat_all_BZ_AL$Q5,  dat_all_BZ_AP$Q5,  "Q5"),
+  OLR_tests(dat_all_BZ_BL$Q6,  dat_all_BZ_AL$Q6,  dat_all_BZ_AP$Q6,  "Q6"),
+  OLR_tests(dat_all_BZ_BL$Q7,  dat_all_BZ_AL$Q7,  dat_all_BZ_AP$Q7,  "Q7"),
+  OLR_tests(dat_all_BZ_BL$Q8,  dat_all_BZ_AL$Q8,  dat_all_BZ_AP$Q8,  "Q8"),
+  OLR_tests(dat_all_BZ_BL$Q9,  dat_all_BZ_AL$Q9,  dat_all_BZ_AP$Q9,  "Q9"),
+  OLR_tests(dat_all_BZ_BL$Q10, dat_all_BZ_AL$Q10, dat_all_BZ_AP$Q10, "Q10"),
+  OLR_tests(dat_all_BZ_BL$Q11, dat_all_BZ_AL$Q11, dat_all_BZ_AP$Q11, "Q11"))
 
-dat_all_BZ_all_stats$FDRall <- p.adjust(dat_all_BZ_all_stats$p, method = "fdr")
+dat_all_BZ_all_OLRout$FDRall <- p.adjust(dat_all_BZ_all_OLRout$p, method = "fdr")
+write.csv(dat_all_BZ_all_OLRout, "dat_all_BZ_all_OLRout.csv")
 
-write.csv(dat_all_BZ_all_stats, "dat_all_BZ_all_stats.csv")
+##################################################################################################
+################# effect sizes with bootstapped CIs
 
+get_effectsize <- function(BL_v, AL_v, AP_v, Q, X){
+  WT_BL_v_AL_df <- data.frame(
+    score = c(BL_v, AL_v),
+    group = ordered(factor(c(rep("BL", length(BL_v)), rep("AL", length(AL_v)))), levels = c("AL", "BL"))
+  )
+  
+  WT_BL_v_AL_result <- as.data.frame(cohens_d(
+    data = WT_BL_v_AL_df, 
+    formula = score ~ group, 
+    paired = FALSE,
+    ci = TRUE, 
+    nboot = X, 
+    ci.type = "perc"
+  ))
+
+  
+  WT_BL_v_AP_df <- data.frame(
+    score = c(BL_v, AP_v),
+    group = ordered(factor(c(rep("BL", length(BL_v)), rep("AP", length(AP_v)))), levels = c("AP", "BL"))
+  )
+  
+  WT_BL_v_AP_result <- as.data.frame(cohens_d(
+    data = WT_BL_v_AP_df, 
+    formula = score ~ group, 
+    paired = FALSE,
+    ci = TRUE, 
+    nboot = X, 
+    ci.type = "perc"
+  ))
+  
+  
+  WT_AL_v_AP_df <- data.frame(
+    score = c(AL_v, AP_v),
+    group = ordered(factor(c(rep("AL", length(AL_v)), rep("AP", length(AP_v)))), levels = c("AP", "AL"))
+  )
+  
+  WT_AL_v_AP_result <- as.data.frame(cohens_d(
+    data = WT_AL_v_AP_df, 
+    formula = score ~ group, 
+    paired = FALSE,
+    ci = TRUE, 
+    nboot = X, 
+    ci.type = "perc"
+  ))
+  
+  out_table <- as.data.frame(rbind(
+    WT_BL_v_AL_result,
+    WT_BL_v_AP_result,
+    WT_AL_v_AP_result))
+  
+  out_table$Q <- c(rep(Q, 3))
+  return(out_table)
+}
+
+
+use_seed = 42
+set.seed(use_seed )
+
+dat_all_BZ_all_effectsizes <- rbind(
+  get_effectsize(dat_all_BZ_BL$Q1,  dat_all_BZ_AL$Q1,  dat_all_BZ_AP$Q1,  "Q1", Nboot),
+  get_effectsize(dat_all_BZ_BL$Q2,  dat_all_BZ_AL$Q2,  dat_all_BZ_AP$Q2,  "Q2", Nboot),
+  get_effectsize(dat_all_BZ_BL$Q3,  dat_all_BZ_AL$Q3,  dat_all_BZ_AP$Q3,  "Q3", Nboot),
+  get_effectsize(dat_all_BZ_BL$Q4,  dat_all_BZ_AL$Q4,  dat_all_BZ_AP$Q4,  "Q4", Nboot),
+  get_effectsize(dat_all_BZ_BL$Q5,  dat_all_BZ_AL$Q5,  dat_all_BZ_AP$Q5,  "Q5", Nboot),
+  get_effectsize(dat_all_BZ_BL$Q6,  dat_all_BZ_AL$Q6,  dat_all_BZ_AP$Q6,  "Q6", Nboot),
+  get_effectsize(dat_all_BZ_BL$Q7,  dat_all_BZ_AL$Q7,  dat_all_BZ_AP$Q7,  "Q7", Nboot),
+  get_effectsize(dat_all_BZ_BL$Q8,  dat_all_BZ_AL$Q8,  dat_all_BZ_AP$Q8,  "Q8", Nboot),
+  get_effectsize(dat_all_BZ_BL$Q9,  dat_all_BZ_AL$Q9,  dat_all_BZ_AP$Q9,  "Q9", Nboot),
+  get_effectsize(dat_all_BZ_BL$Q10, dat_all_BZ_AL$Q10, dat_all_BZ_AP$Q10, "Q10", Nboot),
+  get_effectsize(dat_all_BZ_BL$Q11, dat_all_BZ_AL$Q11, dat_all_BZ_AP$Q11, "Q11", Nboot))
+
+write.csv(dat_all_BZ_all_effectsizes, paste("dat_all_BZ_all_effectsizes", Nboot, "seed", use_seed, ".csv", sep = ""))
 
 
 #######################################################################################################################
 ### gender
 
-Q4_gender_BLALAP <- as.data.frame(rbind(
-  count_12345_in_vector(dat_all_BZ_males_BL$Q4, "males_BL_Q4"),
-  count_12345_in_vector(dat_all_BZ_females_BL$Q4, "females_BL_Q4"),
-  count_12345_in_vector(dat_all_BZ_other_BL$Q4, "other_BL_Q4"),
-  count_12345_in_vector(dat_all_BZ_males_AL$Q4, "males_AL_Q4"),
-  count_12345_in_vector(dat_all_BZ_females_AL$Q4, "females_AL_Q4"), 
-  count_12345_in_vector(dat_all_BZ_other_AL$Q4, "other_AL_Q4"), 
-  count_12345_in_vector(dat_all_BZ_males_AP$Q4, "males_AP_Q4"),
-  count_12345_in_vector(dat_all_BZ_females_AP$Q4, "females_AP_Q4"),
-  count_12345_in_vector(dat_all_BZ_other_AP$Q4, "other_AP_Q4")))
+
+
+OLR_gender_tests <- function(male_v, female_v, other_v, Q){
+  Q_df <- as.data.frame(cbind(
+    c(male_v, female_v, other_v),
+    c(rep("male", length(male_v)), rep("female", length(female_v)), rep("other", length(other_v)))))
+  
+  colnames(Q_df) <- c("score", "gender")
+  Q_df$score    <- ordered(Q_df$score, levels = c(1, 2, 3, 4, 5))
+  Q_df$gender   <- as.factor(Q_df$gender)
+  
+  model_Q <- clm(score ~ gender, data = Q_df)
+  
+  #### Robust standard errors (Huber-White Sandwich Estimator)
+  Q_robust_vcov    <- sandwich(model_Q)
+  Q_robust_results <- coeftest(model_Q, vcov. = Q_robust_vcov)
+  ## pairwise using the robust matrix
+  Q_robust_matrix   <- as.matrix(Q_robust_vcov)
+  Q_gender_emmeans <- emmeans(model_Q, ~ gender, vcov. = Q_robust_matrix)
+  
+  Q_pairs_result <- as.data.frame(pairs(Q_gender_emmeans, adjust = "none")) ### no adjust here as adjust with all Qs
+  Q_pairs_result$Q <- c(Q,Q,Q)
+  
+  return(Q_pairs_result)
+}
+
+
+gender_all_OLRout <- rbind(
+  OLR_gender_tests(dat_all_BZ_males_BL$Q1,  dat_all_BZ_females_BL$Q1, dat_all_BZ_other_BL$Q1, "Q1_BL"),
+  OLR_gender_tests(dat_all_BZ_males_AL$Q1,  dat_all_BZ_females_AL$Q1, dat_all_BZ_other_AL$Q1, "Q1_AL"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q1,  dat_all_BZ_females_AP$Q1, dat_all_BZ_other_AP$Q1, "Q1_AP"),
+  OLR_gender_tests(dat_all_BZ_males_BL$Q2,  dat_all_BZ_females_BL$Q2, dat_all_BZ_other_BL$Q2, "Q2_BL"),
+  OLR_gender_tests(dat_all_BZ_males_AL$Q2,  dat_all_BZ_females_AL$Q2, dat_all_BZ_other_AL$Q2, "Q2_AL"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q2,  dat_all_BZ_females_AP$Q2, dat_all_BZ_other_AP$Q2, "Q2_AP"),
+  OLR_gender_tests(dat_all_BZ_males_BL$Q3,  dat_all_BZ_females_BL$Q3, dat_all_BZ_other_BL$Q3, "Q3_BL"),
+  OLR_gender_tests(dat_all_BZ_males_AL$Q3,  dat_all_BZ_females_AL$Q3, dat_all_BZ_other_AL$Q3, "Q3_AL"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q3,  dat_all_BZ_females_AP$Q3, dat_all_BZ_other_AP$Q3, "Q3_AP"),
+  OLR_gender_tests(dat_all_BZ_males_BL$Q4,  dat_all_BZ_females_BL$Q4, dat_all_BZ_other_BL$Q4, "Q4_BL"),
+  OLR_gender_tests(dat_all_BZ_males_AL$Q4,  dat_all_BZ_females_AL$Q4, dat_all_BZ_other_AL$Q4, "Q4_AL"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q4,  dat_all_BZ_females_AP$Q4, dat_all_BZ_other_AP$Q4, "Q4_AP"),
+  OLR_gender_tests(dat_all_BZ_males_BL$Q5,  dat_all_BZ_females_BL$Q5, dat_all_BZ_other_BL$Q5, "Q5_BL"),
+  OLR_gender_tests(dat_all_BZ_males_AL$Q5,  dat_all_BZ_females_AL$Q5, dat_all_BZ_other_AL$Q5, "Q5_AL"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q5,  dat_all_BZ_females_AP$Q5, dat_all_BZ_other_AP$Q5, "Q5_AP"),
+  OLR_gender_tests(dat_all_BZ_males_BL$Q6,  dat_all_BZ_females_BL$Q6, dat_all_BZ_other_BL$Q6, "Q6_BL"),
+  OLR_gender_tests(dat_all_BZ_males_AL$Q6,  dat_all_BZ_females_AL$Q6, dat_all_BZ_other_AL$Q6, "Q6_AL"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q6,  dat_all_BZ_females_AP$Q6, dat_all_BZ_other_AP$Q6, "Q6_AP"),
+  OLR_gender_tests(dat_all_BZ_males_BL$Q7,  dat_all_BZ_females_BL$Q7, dat_all_BZ_other_BL$Q7, "Q7_BL"),
+  OLR_gender_tests(dat_all_BZ_males_AL$Q7,  dat_all_BZ_females_AL$Q7, dat_all_BZ_other_AL$Q7, "Q7_AL"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q7,  dat_all_BZ_females_AP$Q7, dat_all_BZ_other_AP$Q7, "Q7_AP"),
+  OLR_gender_tests(dat_all_BZ_males_BL$Q8,  dat_all_BZ_females_BL$Q8, dat_all_BZ_other_BL$Q8, "Q8_BL"),
+  OLR_gender_tests(dat_all_BZ_males_AL$Q8,  dat_all_BZ_females_AL$Q8, dat_all_BZ_other_AL$Q8, "Q8_AL"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q8,  dat_all_BZ_females_AP$Q8, dat_all_BZ_other_AP$Q8, "Q8_AP"),
+  OLR_gender_tests(dat_all_BZ_males_BL$Q9,  dat_all_BZ_females_BL$Q9, dat_all_BZ_other_BL$Q9, "Q9_BL"),
+  OLR_gender_tests(dat_all_BZ_males_AL$Q9,  dat_all_BZ_females_AL$Q9, dat_all_BZ_other_AL$Q9, "Q9_AL"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q9,  dat_all_BZ_females_AP$Q9, dat_all_BZ_other_AP$Q9, "Q9_AP"),
+  OLR_gender_tests(dat_all_BZ_males_BL$Q10,  dat_all_BZ_females_BL$Q10, dat_all_BZ_other_BL$Q10, "Q10_BL"),
+  OLR_gender_tests(dat_all_BZ_males_AL$Q10,  dat_all_BZ_females_AL$Q10, dat_all_BZ_other_AL$Q10, "Q10_AL"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q10,  dat_all_BZ_females_AP$Q10, dat_all_BZ_other_AP$Q10, "Q10_AP"),
+  OLR_gender_tests(dat_all_BZ_males_BL$Q11,  dat_all_BZ_females_BL$Q11, dat_all_BZ_other_BL$Q11, "Q11_BL"),
+  OLR_gender_tests(dat_all_BZ_males_AL$Q11,  dat_all_BZ_females_AL$Q11, dat_all_BZ_other_AL$Q11, "Q11_AL"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q11,  dat_all_BZ_females_AP$Q11, dat_all_BZ_other_AP$Q11, "Q11_AP"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q12,  dat_all_BZ_females_AP$Q12, dat_all_BZ_other_AP$Q12, "Q12_AP"),
+  OLR_gender_tests(dat_all_BZ_males_AP$Q13,  dat_all_BZ_females_AP$Q13, dat_all_BZ_other_AP$Q13, "Q13_AP"))
+
+gender_all_OLRout <- subset(gender_all_OLRout, gender_all_OLRout$contrast == "female - male") ### best to just use males and females as too few 'other'
+gender_all_OLRout$FDRall <- p.adjust(gender_all_OLRout$p, method = "fdr")
+write.csv(gender_all_OLRout, "all_20232024_gender_all_OLRout.csv")
+
+
+
+
+##################################################################################################
+################# effect sizes with bootstapped CIs
+
+get_effectsize_gender <- function(male_v, female_v, other_v, Q, X){
+  
+  WT_male_v_female_df <- data.frame(
+    score = c(male_v, female_v),
+    group = ordered(factor(c(rep("male", length(male_v)), rep("female", length(female_v)))), levels = c("female", "male"))
+  )
+  
+  WT_male_v_female_result <- as.data.frame(cohens_d(
+    data = WT_male_v_female_df, 
+    formula = score ~ group, 
+    paired = FALSE,
+    ci = TRUE, 
+    nboot = X, 
+    ci.type = "perc"
+  ))
+  
+  
+  WT_male_v_other_df <- data.frame(
+    score = c(male_v, other_v),
+    group = ordered(factor(c(rep("male", length(male_v)), rep("other", length(other_v)))), levels = c("other", "male"))
+  )
+  
+  WT_male_v_other_result <- as.data.frame(cohens_d(
+    data = WT_male_v_other_df, 
+    formula = score ~ group, 
+    paired = FALSE,
+    ci = TRUE, 
+    nboot = X, 
+    ci.type = "perc"
+  ))
+  
+  
+  WT_female_v_other_df <- data.frame(
+    score = c(female_v, other_v),
+    group = ordered(factor(c(rep("female", length(female_v)), rep("other", length(other_v)))), levels = c("other", "female"))
+  )
+  
+  WT_female_v_other_result <- as.data.frame(cohens_d(
+    data = WT_female_v_other_df, 
+    formula = score ~ group, 
+    paired = FALSE,
+    ci = TRUE, 
+    nboot = X, 
+    ci.type = "perc"
+  ))
+  
+  out_table <- as.data.frame(rbind(
+    WT_male_v_female_result,
+    WT_male_v_other_result,
+    WT_female_v_other_result))
+  
+  out_table$Q <- c(rep(Q, 3))
+  return(out_table)
+}
+
+use_seed = 42
+set.seed(use_seed )
+
+gender_all_effectsizes  <- rbind(
+  get_effectsize_gender(dat_all_BZ_males_BL$Q1,  dat_all_BZ_females_BL$Q1, dat_all_BZ_other_BL$Q1, "Q1_BL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AL$Q1,  dat_all_BZ_females_AL$Q1, dat_all_BZ_other_AL$Q1, "Q1_AL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q1,  dat_all_BZ_females_AP$Q1, dat_all_BZ_other_AP$Q1, "Q1_AP", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_BL$Q2,  dat_all_BZ_females_BL$Q2, dat_all_BZ_other_BL$Q2, "Q2_BL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AL$Q2,  dat_all_BZ_females_AL$Q2, dat_all_BZ_other_AL$Q2, "Q2_AL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q2,  dat_all_BZ_females_AP$Q2, dat_all_BZ_other_AP$Q2, "Q2_AP", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_BL$Q3,  dat_all_BZ_females_BL$Q3, dat_all_BZ_other_BL$Q3, "Q3_BL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AL$Q3,  dat_all_BZ_females_AL$Q3, dat_all_BZ_other_AL$Q3, "Q3_AL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q3,  dat_all_BZ_females_AP$Q3, dat_all_BZ_other_AP$Q3, "Q3_AP", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_BL$Q4,  dat_all_BZ_females_BL$Q4, dat_all_BZ_other_BL$Q4, "Q4_BL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AL$Q4,  dat_all_BZ_females_AL$Q4, dat_all_BZ_other_AL$Q4, "Q4_AL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q4,  dat_all_BZ_females_AP$Q4, dat_all_BZ_other_AP$Q4, "Q4_AP", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_BL$Q5,  dat_all_BZ_females_BL$Q5, dat_all_BZ_other_BL$Q5, "Q5_BL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AL$Q5,  dat_all_BZ_females_AL$Q5, dat_all_BZ_other_AL$Q5, "Q5_AL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q5,  dat_all_BZ_females_AP$Q5, dat_all_BZ_other_AP$Q5, "Q5_AP", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_BL$Q6,  dat_all_BZ_females_BL$Q6, dat_all_BZ_other_BL$Q6, "Q6_BL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AL$Q6,  dat_all_BZ_females_AL$Q6, dat_all_BZ_other_AL$Q6, "Q6_AL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q6,  dat_all_BZ_females_AP$Q6, dat_all_BZ_other_AP$Q6, "Q6_AP", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_BL$Q7,  dat_all_BZ_females_BL$Q7, dat_all_BZ_other_BL$Q7, "Q7_BL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AL$Q7,  dat_all_BZ_females_AL$Q7, dat_all_BZ_other_AL$Q7, "Q7_AL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q7,  dat_all_BZ_females_AP$Q7, dat_all_BZ_other_AP$Q7, "Q7_AP", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_BL$Q8,  dat_all_BZ_females_BL$Q8, dat_all_BZ_other_BL$Q8, "Q8_BL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AL$Q8,  dat_all_BZ_females_AL$Q8, dat_all_BZ_other_AL$Q8, "Q8_AL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q8,  dat_all_BZ_females_AP$Q8, dat_all_BZ_other_AP$Q8, "Q8_AP", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_BL$Q9,  dat_all_BZ_females_BL$Q9, dat_all_BZ_other_BL$Q9, "Q9_BL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AL$Q9,  dat_all_BZ_females_AL$Q9, dat_all_BZ_other_AL$Q9, "Q9_AL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q9,  dat_all_BZ_females_AP$Q9, dat_all_BZ_other_AP$Q9, "Q9_AP", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_BL$Q10,  dat_all_BZ_females_BL$Q10, dat_all_BZ_other_BL$Q10, "Q10_BL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AL$Q10,  dat_all_BZ_females_AL$Q10, dat_all_BZ_other_AL$Q10, "Q10_AL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q10,  dat_all_BZ_females_AP$Q10, dat_all_BZ_other_AP$Q10, "Q10_AP", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_BL$Q11,  dat_all_BZ_females_BL$Q11, dat_all_BZ_other_BL$Q11, "Q11_BL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AL$Q11,  dat_all_BZ_females_AL$Q11, dat_all_BZ_other_AL$Q11, "Q11_AL", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q11,  dat_all_BZ_females_AP$Q11, dat_all_BZ_other_AP$Q11, "Q11_AP", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q12,  dat_all_BZ_females_AP$Q12, dat_all_BZ_other_AP$Q12, "Q12_AP", Nboot),
+  get_effectsize_gender(dat_all_BZ_males_AP$Q13,  dat_all_BZ_females_AP$Q13, dat_all_BZ_other_AP$Q13, "Q13_AP", Nboot))
+
+gender_all_effectsizes$group <- paste(gender_all_effectsizes$group1, gender_all_effectsizes$group2)
+gender_all_effectsizes <- subset(gender_all_effectsizes, gender_all_effectsizes$group == "female male") ### best to just use males and females as too few 'other'
+
+write.csv(gender_all_effectsizes, paste("gender_all_effectsizes", Nboot, "seed", use_seed, ".csv", sep = ""))
+
+############################################################################################################
+###### plot Qs with sig effects
+### plotting with other, but not tested
 
 Q6_gender_BLALAP <- as.data.frame(rbind(
   count_12345_in_vector(dat_all_BZ_males_BL$Q6, "males_BL_Q6"),
@@ -589,37 +841,19 @@ Q8_gender_BLALAP <- as.data.frame(rbind(
   count_12345_in_vector(dat_all_BZ_females_AP$Q8, "females_AP_Q8"),
   count_12345_in_vector(dat_all_BZ_other_AP$Q8, "other_AP_Q8")))
 
-
-Q6_gender_BLALAP_MF <- as.data.frame(rbind(
-  count_12345_in_vector(dat_all_BZ_males_BL$Q6, "males_BL_Q6"),
-  count_12345_in_vector(dat_all_BZ_females_BL$Q6, "females_BL_Q6"),
-  count_12345_in_vector(dat_all_BZ_males_AL$Q6, "males_AL_Q6"),
-  count_12345_in_vector(dat_all_BZ_females_AL$Q6, "females_AL_Q6"), 
-  count_12345_in_vector(dat_all_BZ_males_AP$Q6, "males_AP_Q6"),
-  count_12345_in_vector(dat_all_BZ_females_AP$Q6, "females_AP_Q6")))
-
-Q7_gender_BLALAP_MF <- as.data.frame(rbind(
-  count_12345_in_vector(dat_all_BZ_males_BL$Q7, "males_BL_Q7"),
-  count_12345_in_vector(dat_all_BZ_females_BL$Q7, "females_BL_Q7"),
-  count_12345_in_vector(dat_all_BZ_males_AL$Q7, "males_AL_Q7"),
-  count_12345_in_vector(dat_all_BZ_females_AL$Q7, "females_AL_Q7"), 
-  count_12345_in_vector(dat_all_BZ_males_AP$Q7, "males_AP_Q7"),
-  count_12345_in_vector(dat_all_BZ_females_AP$Q7, "females_AP_Q7")))
-
-Q8_gender_BLALAP_MF <- as.data.frame(rbind(
-  count_12345_in_vector(dat_all_BZ_males_BL$Q8, "males_BL_Q8"),
-  count_12345_in_vector(dat_all_BZ_females_BL$Q8, "females_BL_Q8"),
-  count_12345_in_vector(dat_all_BZ_males_AL$Q8, "males_AL_Q8"),
-  count_12345_in_vector(dat_all_BZ_females_AL$Q8, "females_AL_Q8"), 
-  count_12345_in_vector(dat_all_BZ_males_AP$Q8, "males_AP_Q8"),
-  count_12345_in_vector(dat_all_BZ_females_AP$Q8, "females_AP_Q8")))
+Q11_gender_BLALAP <- as.data.frame(rbind(
+  count_12345_in_vector(dat_all_BZ_males_BL$Q11, "males_BL_Q11"),
+  count_12345_in_vector(dat_all_BZ_females_BL$Q11, "females_BL_Q11"),
+  count_12345_in_vector(dat_all_BZ_other_BL$Q11, "other_BL_Q11"),
+  count_12345_in_vector(dat_all_BZ_males_AL$Q11, "males_AL_Q11"),
+  count_12345_in_vector(dat_all_BZ_females_AL$Q11, "females_AL_Q11"), 
+  count_12345_in_vector(dat_all_BZ_other_AL$Q11, "other_AL_Q11"), 
+  count_12345_in_vector(dat_all_BZ_males_AP$Q11, "males_AP_Q11"),
+  count_12345_in_vector(dat_all_BZ_females_AP$Q11, "females_AP_Q11"),
+  count_12345_in_vector(dat_all_BZ_other_AP$Q11, "other_AP_Q11")))
 
 out_height_g = 6
 
-pdf("Q4_gender_BLALAP_LP.pdf", width = out_width, height = out_height_g)
-plot.likert(Q4_gender_BLALAP, as.percent=TRUE, main = "Understanding insects will help me get a job after I graduate.", xlim=c(-100,120))
-dev.off()
-getwd() ## where has my plot gone....?
 
 pdf("Q6_gender_BLALAP_LP.pdf", width = out_width, height = out_height_g)
 plot.likert(Q6_gender_BLALAP, as.percent=TRUE, main = "Insects are disgusting.", xlim=c(-100,120))
@@ -636,106 +870,533 @@ plot.likert(Q8_gender_BLALAP, as.percent=TRUE, main = "Insects are boring.", xli
 dev.off()
 getwd() ## where has my plot gone....?
 
-## show MF only 
-
-out_height_g_MF = 4
-
-pdf("Q6_gender_BLALAP_LP_MF.pdf", width = out_width, height = out_height_g_MF)
-plot.likert(Q6_gender_BLALAP_MF, as.percent=TRUE, main = "Insects are disgusting.", xlim=c(-100,120))
+pdf("Q11_gender_BLALAP_LP.pdf", width = out_width, height = out_height_g)
+plot.likert(Q11_gender_BLALAP, as.percent=TRUE, main = "I can describe the anatomy of insects well.", xlim=c(-100,120))
 dev.off()
 getwd() ## where has my plot gone....?
 
-pdf("Q7_gender_BLALAP_LP_MF.pdf", width = out_width, height = out_height_g_MF)
-plot.likert(Q7_gender_BLALAP_MF, as.percent=TRUE, main = "I am afraid of insects.", xlim=c(-100,120))
-dev.off()
-getwd() ## where has my plot gone....?
-
-pdf("Q8_gender_BLALAP_LP_MF.pdf", width = out_width, height = out_height_g_MF)
-plot.likert(Q8_gender_BLALAP_MF, as.percent=TRUE, main = "Insects are boring.", xlim=c(-100,120))
-dev.off()
-getwd() ## where has my plot gone....?
+###########################################################################################
+### interaction test with ordinal regression for all Qs
 
 
-
-
-wilcox_test_gender <- function(male_v, female_v, other_v, Q){
+##### Q1
+Q1_gender_long <- as.data.frame(cbind(
   
-  WT_male_v_female_v  <- wilcox.test(male_v,   female_v)
-  WT_male_v_other_v   <- wilcox.test(male_v,   other_v)
-  WT_female_v_other_v <- wilcox.test(female_v, other_v)
+  c(
+    dat_all_BZ_males_BL$Q1,
+    dat_all_BZ_females_BL$Q1,
+    dat_all_BZ_males_AL$Q1, 
+    dat_all_BZ_females_AL$Q1,
+    dat_all_BZ_males_AP$Q1,
+    dat_all_BZ_females_AP$Q1),
   
-  print(WT_male_v_female_v)
-  print(WT_male_v_other_v )
-  print(WT_female_v_other_v)
+  c(
+    rep("male", length(dat_all_BZ_males_BL$Q1)),
+    rep("female", length(dat_all_BZ_females_BL$Q1)),
+    rep("male", length(dat_all_BZ_males_AL$Q1)), 
+    rep("female", length(dat_all_BZ_females_AL$Q1)),
+    rep("male", length(dat_all_BZ_males_AP$Q1)),
+    rep("female", length(dat_all_BZ_females_AP$Q1))),
   
-  stats_table <- as.data.frame(cbind(
-    c(Q,Q,Q),
-    c("malevfemale", "malevother", "femalevother"),
-    c(WT_male_v_female_v$p.value, WT_male_v_other_v$p.value, WT_female_v_other_v$p.value)))
-  
-  colnames(stats_table) <- c("Q", "comp", "p")
-  
-  stats_table$FDR <- p.adjust(stats_table$p, method = "fdr")
-  
-  return(stats_table)
-  
-}
-
-gender_stats <- rbind(
-  wilcox_test_gender(dat_all_BZ_males_BL$Q1,  dat_all_BZ_females_BL$Q1, dat_all_BZ_other_BL$Q1, "Q1_BL"),
-  wilcox_test_gender(dat_all_BZ_males_AL$Q1,  dat_all_BZ_females_AL$Q1, dat_all_BZ_other_AL$Q1, "Q1_AL"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q1,  dat_all_BZ_females_AP$Q1, dat_all_BZ_other_AP$Q1, "Q1_AP"),
-  wilcox_test_gender(dat_all_BZ_males_BL$Q2,  dat_all_BZ_females_BL$Q2, dat_all_BZ_other_BL$Q2, "Q2_BL"),
-  wilcox_test_gender(dat_all_BZ_males_AL$Q2,  dat_all_BZ_females_AL$Q2, dat_all_BZ_other_AL$Q2, "Q2_AL"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q2,  dat_all_BZ_females_AP$Q2, dat_all_BZ_other_AP$Q2, "Q2_AP"),
-  wilcox_test_gender(dat_all_BZ_males_BL$Q3,  dat_all_BZ_females_BL$Q3, dat_all_BZ_other_BL$Q3, "Q3_BL"),
-  wilcox_test_gender(dat_all_BZ_males_AL$Q3,  dat_all_BZ_females_AL$Q3, dat_all_BZ_other_AL$Q3, "Q3_AL"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q3,  dat_all_BZ_females_AP$Q3, dat_all_BZ_other_AP$Q3, "Q3_AP"),
-  wilcox_test_gender(dat_all_BZ_males_BL$Q4,  dat_all_BZ_females_BL$Q4, dat_all_BZ_other_BL$Q4, "Q4_BL"),
-  wilcox_test_gender(dat_all_BZ_males_AL$Q4,  dat_all_BZ_females_AL$Q4, dat_all_BZ_other_AL$Q4, "Q4_AL"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q4,  dat_all_BZ_females_AP$Q4, dat_all_BZ_other_AP$Q4, "Q4_AP"),
-  wilcox_test_gender(dat_all_BZ_males_BL$Q5,  dat_all_BZ_females_BL$Q5, dat_all_BZ_other_BL$Q5, "Q5_BL"),
-  wilcox_test_gender(dat_all_BZ_males_AL$Q5,  dat_all_BZ_females_AL$Q5, dat_all_BZ_other_AL$Q5, "Q5_AL"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q5,  dat_all_BZ_females_AP$Q5, dat_all_BZ_other_AP$Q5, "Q5_AP"),
-  wilcox_test_gender(dat_all_BZ_males_BL$Q6,  dat_all_BZ_females_BL$Q6, dat_all_BZ_other_BL$Q6, "Q6_BL"),
-  wilcox_test_gender(dat_all_BZ_males_AL$Q6,  dat_all_BZ_females_AL$Q6, dat_all_BZ_other_AL$Q6, "Q6_AL"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q6,  dat_all_BZ_females_AP$Q6, dat_all_BZ_other_AP$Q6, "Q6_AP"),
-  wilcox_test_gender(dat_all_BZ_males_BL$Q7,  dat_all_BZ_females_BL$Q7, dat_all_BZ_other_BL$Q7, "Q7_BL"),
-  wilcox_test_gender(dat_all_BZ_males_AL$Q7,  dat_all_BZ_females_AL$Q7, dat_all_BZ_other_AL$Q7, "Q7_AL"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q7,  dat_all_BZ_females_AP$Q7, dat_all_BZ_other_AP$Q7, "Q7_AP"),
-  wilcox_test_gender(dat_all_BZ_males_BL$Q8,  dat_all_BZ_females_BL$Q8, dat_all_BZ_other_BL$Q8, "Q8_BL"),
-  wilcox_test_gender(dat_all_BZ_males_AL$Q8,  dat_all_BZ_females_AL$Q8, dat_all_BZ_other_AL$Q8, "Q8_AL"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q8,  dat_all_BZ_females_AP$Q8, dat_all_BZ_other_AP$Q8, "Q8_AP"),
-  wilcox_test_gender(dat_all_BZ_males_BL$Q9,  dat_all_BZ_females_BL$Q9, dat_all_BZ_other_BL$Q9, "Q9_BL"),
-  wilcox_test_gender(dat_all_BZ_males_AL$Q9,  dat_all_BZ_females_AL$Q9, dat_all_BZ_other_AL$Q9, "Q9_AL"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q9,  dat_all_BZ_females_AP$Q9, dat_all_BZ_other_AP$Q9, "Q9_AP"),
-  wilcox_test_gender(dat_all_BZ_males_BL$Q10,  dat_all_BZ_females_BL$Q10, dat_all_BZ_other_BL$Q10, "Q10_BL"),
-  wilcox_test_gender(dat_all_BZ_males_AL$Q10,  dat_all_BZ_females_AL$Q10, dat_all_BZ_other_AL$Q10, "Q10_AL"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q10,  dat_all_BZ_females_AP$Q10, dat_all_BZ_other_AP$Q10, "Q10_AP"),
-  wilcox_test_gender(dat_all_BZ_males_BL$Q11,  dat_all_BZ_females_BL$Q11, dat_all_BZ_other_BL$Q11, "Q11_BL"),
-  wilcox_test_gender(dat_all_BZ_males_AL$Q11,  dat_all_BZ_females_AL$Q11, dat_all_BZ_other_AL$Q11, "Q11_AL"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q11,  dat_all_BZ_females_AP$Q11, dat_all_BZ_other_AP$Q11, "Q11_AP"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q12,  dat_all_BZ_females_AP$Q12, dat_all_BZ_other_AP$Q12, "Q12_AP"),
-  wilcox_test_gender(dat_all_BZ_males_AP$Q13,  dat_all_BZ_females_AP$Q13, dat_all_BZ_other_AP$Q13, "Q13_AP"))
+  c(
+    rep("BL", length(dat_all_BZ_males_BL$Q1)),
+    rep("BL", length(dat_all_BZ_females_BL$Q1)),
+    rep("AL", length(dat_all_BZ_males_AL$Q1)), 
+    rep("AL", length(dat_all_BZ_females_AL$Q1)),
+    rep("AP", length(dat_all_BZ_males_AP$Q1)),
+    rep("AP", length(dat_all_BZ_females_AP$Q1)))))
 
 
-gender_stats$FDRall <- p.adjust(gender_stats$p, method = "fdr")
 
-write.csv(gender_stats, "all_20232024_gender_stats.csv")
+colnames(Q1_gender_long) <- c("score", "gender", "session")
+Q1_gender_long$score <- ordered(Q1_gender_long$score, levels = c(1, 2, 3, 4, 5))
+Q1_gender_long$session  <- ordered(Q1_gender_long$session,  levels = c("BL", "AL", "AP"))
+Q1_gender_long$gender <- as.factor(Q1_gender_long$gender )
+
+str(Q1_gender_long)
+
+model_Q1_gender <- clm(score ~ gender + session, data = Q1_gender_long)
+model_Q1_gender_interaction <- clm(score ~ gender * session, data = Q1_gender_long)
+Q1_gender_robust_vcov    <- sandwich(model_Q1_gender_interaction)
+Q1_gender_robust_waldtest <- waldtest(model_Q1_gender, model_Q1_gender_interaction, vcov = Q1_gender_robust_vcov )
+
+
+
+##### Q2
+Q2_gender_long <- as.data.frame(cbind(
+  
+  c(
+    dat_all_BZ_males_BL$Q2,
+    dat_all_BZ_females_BL$Q2,
+    dat_all_BZ_males_AL$Q2, 
+    dat_all_BZ_females_AL$Q2,
+    dat_all_BZ_males_AP$Q2,
+    dat_all_BZ_females_AP$Q2),
+  
+  c(
+    rep("male", length(dat_all_BZ_males_BL$Q2)),
+    rep("female", length(dat_all_BZ_females_BL$Q2)),
+    rep("male", length(dat_all_BZ_males_AL$Q2)), 
+    rep("female", length(dat_all_BZ_females_AL$Q2)),
+    rep("male", length(dat_all_BZ_males_AP$Q2)),
+    rep("female", length(dat_all_BZ_females_AP$Q2))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_males_BL$Q2)),
+    rep("BL", length(dat_all_BZ_females_BL$Q2)),
+    rep("AL", length(dat_all_BZ_males_AL$Q2)), 
+    rep("AL", length(dat_all_BZ_females_AL$Q2)),
+    rep("AP", length(dat_all_BZ_males_AP$Q2)),
+    rep("AP", length(dat_all_BZ_females_AP$Q2)))))
+
+
+
+colnames(Q2_gender_long) <- c("score", "gender", "session")
+Q2_gender_long$score <- ordered(Q2_gender_long$score, levels = c(1, 2, 3, 4, 5))
+Q2_gender_long$session  <- ordered(Q2_gender_long$session,  levels = c("BL", "AL", "AP"))
+Q2_gender_long$gender <- as.factor(Q2_gender_long$gender )
+
+str(Q2_gender_long)
+
+model_Q2_gender <- clm(score ~ gender + session, data = Q2_gender_long)
+model_Q2_gender_interaction <- clm(score ~ gender * session, data = Q2_gender_long)
+Q2_gender_robust_vcov    <- sandwich(model_Q2_gender_interaction)
+Q2_gender_robust_waldtest <- waldtest(model_Q2_gender, model_Q2_gender_interaction, vcov = Q2_gender_robust_vcov )
+
+
+##### Q3
+Q3_gender_long <- as.data.frame(cbind(
+  
+  c(
+    dat_all_BZ_males_BL$Q3,
+    dat_all_BZ_females_BL$Q3,
+    dat_all_BZ_males_AL$Q3, 
+    dat_all_BZ_females_AL$Q3,
+    dat_all_BZ_males_AP$Q3,
+    dat_all_BZ_females_AP$Q3),
+  
+  c(
+    rep("male", length(dat_all_BZ_males_BL$Q3)),
+    rep("female", length(dat_all_BZ_females_BL$Q3)),
+    rep("male", length(dat_all_BZ_males_AL$Q3)), 
+    rep("female", length(dat_all_BZ_females_AL$Q3)),
+    rep("male", length(dat_all_BZ_males_AP$Q3)),
+    rep("female", length(dat_all_BZ_females_AP$Q3))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_males_BL$Q3)),
+    rep("BL", length(dat_all_BZ_females_BL$Q3)),
+    rep("AL", length(dat_all_BZ_males_AL$Q3)), 
+    rep("AL", length(dat_all_BZ_females_AL$Q3)),
+    rep("AP", length(dat_all_BZ_males_AP$Q3)),
+    rep("AP", length(dat_all_BZ_females_AP$Q3)))))
+
+
+
+colnames(Q3_gender_long) <- c("score", "gender", "session")
+Q3_gender_long$score <- ordered(Q3_gender_long$score, levels = c(1, 2, 3, 4, 5))
+Q3_gender_long$session  <- ordered(Q3_gender_long$session,  levels = c("BL", "AL", "AP"))
+Q3_gender_long$gender <- as.factor(Q3_gender_long$gender )
+
+str(Q3_gender_long)
+
+model_Q3_gender <- clm(score ~ gender + session, data = Q3_gender_long)
+model_Q3_gender_interaction <- clm(score ~ gender * session, data = Q3_gender_long)
+Q3_gender_robust_vcov    <- sandwich(model_Q3_gender_interaction)
+Q3_gender_robust_waldtest <- waldtest(model_Q3_gender, model_Q3_gender_interaction, vcov = Q3_gender_robust_vcov )
+
+
+##### Q4
+Q4_gender_long <- as.data.frame(cbind(
+  
+  c(
+    dat_all_BZ_males_BL$Q4,
+    dat_all_BZ_females_BL$Q4,
+    dat_all_BZ_males_AL$Q4, 
+    dat_all_BZ_females_AL$Q4,
+    dat_all_BZ_males_AP$Q4,
+    dat_all_BZ_females_AP$Q4),
+  
+  c(
+    rep("male", length(dat_all_BZ_males_BL$Q4)),
+    rep("female", length(dat_all_BZ_females_BL$Q4)),
+    rep("male", length(dat_all_BZ_males_AL$Q4)), 
+    rep("female", length(dat_all_BZ_females_AL$Q4)),
+    rep("male", length(dat_all_BZ_males_AP$Q4)),
+    rep("female", length(dat_all_BZ_females_AP$Q4))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_males_BL$Q4)),
+    rep("BL", length(dat_all_BZ_females_BL$Q4)),
+    rep("AL", length(dat_all_BZ_males_AL$Q4)), 
+    rep("AL", length(dat_all_BZ_females_AL$Q4)),
+    rep("AP", length(dat_all_BZ_males_AP$Q4)),
+    rep("AP", length(dat_all_BZ_females_AP$Q4)))))
+
+
+
+colnames(Q4_gender_long) <- c("score", "gender", "session")
+Q4_gender_long$score <- ordered(Q4_gender_long$score, levels = c(1, 2, 3, 4, 5))
+Q4_gender_long$session  <- ordered(Q4_gender_long$session,  levels = c("BL", "AL", "AP"))
+Q4_gender_long$gender <- as.factor(Q4_gender_long$gender )
+
+str(Q4_gender_long)
+
+model_Q4_gender <- clm(score ~ gender + session, data = Q4_gender_long)
+model_Q4_gender_interaction <- clm(score ~ gender * session, data = Q4_gender_long)
+Q4_gender_robust_vcov    <- sandwich(model_Q4_gender_interaction)
+Q4_gender_robust_waldtest <- waldtest(model_Q4_gender, model_Q4_gender_interaction, vcov = Q4_gender_robust_vcov )
+
+
+##### Q6
+Q6_gender_long <- as.data.frame(cbind(
+  
+  c(
+    dat_all_BZ_males_BL$Q6,
+    dat_all_BZ_females_BL$Q6,
+    dat_all_BZ_males_AL$Q6, 
+    dat_all_BZ_females_AL$Q6,
+    dat_all_BZ_males_AP$Q6,
+    dat_all_BZ_females_AP$Q6),
+  
+  c(
+    rep("male", length(dat_all_BZ_males_BL$Q6)),
+    rep("female", length(dat_all_BZ_females_BL$Q6)),
+    rep("male", length(dat_all_BZ_males_AL$Q6)), 
+    rep("female", length(dat_all_BZ_females_AL$Q6)),
+    rep("male", length(dat_all_BZ_males_AP$Q6)),
+    rep("female", length(dat_all_BZ_females_AP$Q6))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_males_BL$Q6)),
+    rep("BL", length(dat_all_BZ_females_BL$Q6)),
+    rep("AL", length(dat_all_BZ_males_AL$Q6)), 
+    rep("AL", length(dat_all_BZ_females_AL$Q6)),
+    rep("AP", length(dat_all_BZ_males_AP$Q6)),
+    rep("AP", length(dat_all_BZ_females_AP$Q6)))))
+
+
+
+##### Q5
+Q5_gender_long <- as.data.frame(cbind(
+  
+  c(
+    dat_all_BZ_males_BL$Q5,
+    dat_all_BZ_females_BL$Q5,
+    dat_all_BZ_males_AL$Q5, 
+    dat_all_BZ_females_AL$Q5,
+    dat_all_BZ_males_AP$Q5,
+    dat_all_BZ_females_AP$Q5),
+  
+  c(
+    rep("male", length(dat_all_BZ_males_BL$Q5)),
+    rep("female", length(dat_all_BZ_females_BL$Q5)),
+    rep("male", length(dat_all_BZ_males_AL$Q5)), 
+    rep("female", length(dat_all_BZ_females_AL$Q5)),
+    rep("male", length(dat_all_BZ_males_AP$Q5)),
+    rep("female", length(dat_all_BZ_females_AP$Q5))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_males_BL$Q5)),
+    rep("BL", length(dat_all_BZ_females_BL$Q5)),
+    rep("AL", length(dat_all_BZ_males_AL$Q5)), 
+    rep("AL", length(dat_all_BZ_females_AL$Q5)),
+    rep("AP", length(dat_all_BZ_males_AP$Q5)),
+    rep("AP", length(dat_all_BZ_females_AP$Q5)))))
+
+
+
+colnames(Q5_gender_long) <- c("score", "gender", "session")
+Q5_gender_long$score <- ordered(Q5_gender_long$score, levels = c(1, 2, 3, 4, 5))
+Q5_gender_long$session  <- ordered(Q5_gender_long$session,  levels = c("BL", "AL", "AP"))
+Q5_gender_long$gender <- as.factor(Q5_gender_long$gender )
+
+str(Q5_gender_long)
+
+model_Q5_gender <- clm(score ~ gender + session, data = Q5_gender_long)
+model_Q5_gender_interaction <- clm(score ~ gender * session, data = Q5_gender_long)
+Q5_gender_robust_vcov    <- sandwich(model_Q5_gender_interaction)
+Q5_gender_robust_waldtest <- waldtest(model_Q5_gender, model_Q5_gender_interaction, vcov = Q5_gender_robust_vcov )
+
+colnames(Q6_gender_long) <- c("score", "gender", "session")
+Q6_gender_long$score <- ordered(Q6_gender_long$score, levels = c(1, 2, 3, 4, 5))
+Q6_gender_long$session  <- ordered(Q6_gender_long$session,  levels = c("BL", "AL", "AP"))
+Q6_gender_long$gender <- as.factor(Q6_gender_long$gender )
+
+str(Q6_gender_long)
+
+model_Q6_gender <- clm(score ~ gender + session, data = Q6_gender_long)
+model_Q6_gender_interaction <- clm(score ~ gender * session, data = Q6_gender_long)
+Q6_gender_robust_vcov    <- sandwich(model_Q6_gender_interaction)
+Q6_gender_robust_waldtest <- waldtest(model_Q6_gender, model_Q6_gender_interaction, vcov = Q6_gender_robust_vcov )
+
+##### Q7
+Q7_gender_long <- as.data.frame(cbind(
+  
+  c(
+    dat_all_BZ_males_BL$Q7,
+    dat_all_BZ_females_BL$Q7,
+    dat_all_BZ_males_AL$Q7, 
+    dat_all_BZ_females_AL$Q7,
+    dat_all_BZ_males_AP$Q7,
+    dat_all_BZ_females_AP$Q7),
+  
+  c(
+    rep("male", length(dat_all_BZ_males_BL$Q7)),
+    rep("female", length(dat_all_BZ_females_BL$Q7)),
+    rep("male", length(dat_all_BZ_males_AL$Q7)), 
+    rep("female", length(dat_all_BZ_females_AL$Q7)),
+    rep("male", length(dat_all_BZ_males_AP$Q7)),
+    rep("female", length(dat_all_BZ_females_AP$Q7))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_males_BL$Q7)),
+    rep("BL", length(dat_all_BZ_females_BL$Q7)),
+    rep("AL", length(dat_all_BZ_males_AL$Q7)), 
+    rep("AL", length(dat_all_BZ_females_AL$Q7)),
+    rep("AP", length(dat_all_BZ_males_AP$Q7)),
+    rep("AP", length(dat_all_BZ_females_AP$Q7)))))
+
+
+
+colnames(Q7_gender_long) <- c("score", "gender", "session")
+Q7_gender_long$score <- ordered(Q7_gender_long$score, levels = c(1, 2, 3, 4, 5))
+Q7_gender_long$session  <- ordered(Q7_gender_long$session,  levels = c("BL", "AL", "AP"))
+Q7_gender_long$gender <- as.factor(Q7_gender_long$gender )
+
+str(Q7_gender_long)
+
+model_Q7_gender <- clm(score ~ gender + session, data = Q7_gender_long)
+model_Q7_gender_interaction <- clm(score ~ gender * session, data = Q7_gender_long)
+Q7_gender_robust_vcov    <- sandwich(model_Q7_gender_interaction)
+Q7_gender_robust_waldtest <- waldtest(model_Q7_gender, model_Q7_gender_interaction, vcov = Q7_gender_robust_vcov )
+
+##### Q8
+Q8_gender_long <- as.data.frame(cbind(
+  
+  c(
+    dat_all_BZ_males_BL$Q8,
+    dat_all_BZ_females_BL$Q8,
+    dat_all_BZ_males_AL$Q8, 
+    dat_all_BZ_females_AL$Q8,
+    dat_all_BZ_males_AP$Q8,
+    dat_all_BZ_females_AP$Q8),
+  
+  c(
+    rep("male", length(dat_all_BZ_males_BL$Q8)),
+    rep("female", length(dat_all_BZ_females_BL$Q8)),
+    rep("male", length(dat_all_BZ_males_AL$Q8)), 
+    rep("female", length(dat_all_BZ_females_AL$Q8)),
+    rep("male", length(dat_all_BZ_males_AP$Q8)),
+    rep("female", length(dat_all_BZ_females_AP$Q8))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_males_BL$Q8)),
+    rep("BL", length(dat_all_BZ_females_BL$Q8)),
+    rep("AL", length(dat_all_BZ_males_AL$Q8)), 
+    rep("AL", length(dat_all_BZ_females_AL$Q8)),
+    rep("AP", length(dat_all_BZ_males_AP$Q8)),
+    rep("AP", length(dat_all_BZ_females_AP$Q8)))))
+
+
+
+colnames(Q8_gender_long) <- c("score", "gender", "session")
+Q8_gender_long$score <- ordered(Q8_gender_long$score, levels = c(1, 2, 3, 4, 5))
+Q8_gender_long$session  <- ordered(Q8_gender_long$session,  levels = c("BL", "AL", "AP"))
+Q8_gender_long$gender <- as.factor(Q8_gender_long$gender )
+
+model_Q8_gender <- clm(score ~ gender + session, data = Q8_gender_long)
+model_Q8_gender_interaction <- clm(score ~ gender * session, data = Q8_gender_long)
+Q8_gender_robust_vcov    <- sandwich(model_Q8_gender_interaction)
+Q8_gender_robust_waldtest <- waldtest(model_Q8_gender, model_Q8_gender_interaction, vcov = Q8_gender_robust_vcov )
+
+
+
+##### Q9
+Q9_gender_long <- as.data.frame(cbind(
+  
+  c(
+    dat_all_BZ_males_BL$Q9,
+    dat_all_BZ_females_BL$Q9,
+    dat_all_BZ_males_AL$Q9, 
+    dat_all_BZ_females_AL$Q9,
+    dat_all_BZ_males_AP$Q9,
+    dat_all_BZ_females_AP$Q9),
+  
+  c(
+    rep("male", length(dat_all_BZ_males_BL$Q9)),
+    rep("female", length(dat_all_BZ_females_BL$Q9)),
+    rep("male", length(dat_all_BZ_males_AL$Q9)), 
+    rep("female", length(dat_all_BZ_females_AL$Q9)),
+    rep("male", length(dat_all_BZ_males_AP$Q9)),
+    rep("female", length(dat_all_BZ_females_AP$Q9))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_males_BL$Q9)),
+    rep("BL", length(dat_all_BZ_females_BL$Q9)),
+    rep("AL", length(dat_all_BZ_males_AL$Q9)), 
+    rep("AL", length(dat_all_BZ_females_AL$Q9)),
+    rep("AP", length(dat_all_BZ_males_AP$Q9)),
+    rep("AP", length(dat_all_BZ_females_AP$Q9)))))
+
+
+
+colnames(Q9_gender_long) <- c("score", "gender", "session")
+Q9_gender_long$score <- ordered(Q9_gender_long$score, levels = c(1, 2, 3, 4, 5))
+Q9_gender_long$session  <- ordered(Q9_gender_long$session,  levels = c("BL", "AL", "AP"))
+Q9_gender_long$gender <- as.factor(Q9_gender_long$gender )
+
+str(Q9_gender_long)
+
+model_Q9_gender <- clm(score ~ gender + session, data = Q9_gender_long)
+model_Q9_gender_interaction <- clm(score ~ gender * session, data = Q9_gender_long)
+Q9_gender_robust_vcov    <- sandwich(model_Q9_gender_interaction)
+Q9_gender_robust_waldtest <- waldtest(model_Q9_gender, model_Q9_gender_interaction, vcov = Q9_gender_robust_vcov )
+
+
+
+##### Q10
+Q10_gender_long <- as.data.frame(cbind(
+  
+  c(
+    dat_all_BZ_males_BL$Q10,
+    dat_all_BZ_females_BL$Q10,
+    dat_all_BZ_males_AL$Q10, 
+    dat_all_BZ_females_AL$Q10,
+    dat_all_BZ_males_AP$Q10,
+    dat_all_BZ_females_AP$Q10),
+  
+  c(
+    rep("male", length(dat_all_BZ_males_BL$Q10)),
+    rep("female", length(dat_all_BZ_females_BL$Q10)),
+    rep("male", length(dat_all_BZ_males_AL$Q10)), 
+    rep("female", length(dat_all_BZ_females_AL$Q10)),
+    rep("male", length(dat_all_BZ_males_AP$Q10)),
+    rep("female", length(dat_all_BZ_females_AP$Q10))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_males_BL$Q10)),
+    rep("BL", length(dat_all_BZ_females_BL$Q10)),
+    rep("AL", length(dat_all_BZ_males_AL$Q10)), 
+    rep("AL", length(dat_all_BZ_females_AL$Q10)),
+    rep("AP", length(dat_all_BZ_males_AP$Q10)),
+    rep("AP", length(dat_all_BZ_females_AP$Q10)))))
+
+
+
+colnames(Q10_gender_long) <- c("score", "gender", "session")
+Q10_gender_long$score <- ordered(Q10_gender_long$score, levels = c(1, 2, 3, 4, 5))
+Q10_gender_long$session  <- ordered(Q10_gender_long$session,  levels = c("BL", "AL", "AP"))
+Q10_gender_long$gender <- as.factor(Q10_gender_long$gender )
+
+str(Q10_gender_long)
+
+model_Q10_gender <- clm(score ~ gender + session, data = Q10_gender_long)
+model_Q10_gender_interaction <- clm(score ~ gender * session, data = Q10_gender_long)
+Q10_gender_robust_vcov    <- sandwich(model_Q10_gender_interaction)
+Q10_gender_robust_waldtest <- waldtest(model_Q10_gender, model_Q10_gender_interaction, vcov = Q10_gender_robust_vcov )
+
+
+
+
+
+##### Q11
+Q11_gender_long <- as.data.frame(cbind(
+  
+  c(
+    dat_all_BZ_males_BL$Q11,
+    dat_all_BZ_females_BL$Q11,
+    dat_all_BZ_males_AL$Q11, 
+    dat_all_BZ_females_AL$Q11,
+    dat_all_BZ_males_AP$Q11,
+    dat_all_BZ_females_AP$Q11),
+  
+  c(
+    rep("male", length(dat_all_BZ_males_BL$Q11)),
+    rep("female", length(dat_all_BZ_females_BL$Q11)),
+    rep("male", length(dat_all_BZ_males_AL$Q11)), 
+    rep("female", length(dat_all_BZ_females_AL$Q11)),
+    rep("male", length(dat_all_BZ_males_AP$Q11)),
+    rep("female", length(dat_all_BZ_females_AP$Q11))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_males_BL$Q11)),
+    rep("BL", length(dat_all_BZ_females_BL$Q11)),
+    rep("AL", length(dat_all_BZ_males_AL$Q11)), 
+    rep("AL", length(dat_all_BZ_females_AL$Q11)),
+    rep("AP", length(dat_all_BZ_males_AP$Q11)),
+    rep("AP", length(dat_all_BZ_females_AP$Q11)))))
+
+
+
+colnames(Q11_gender_long) <- c("score", "gender", "session")
+Q11_gender_long$score <- ordered(Q11_gender_long$score, levels = c(1, 2, 3, 4, 5))
+Q11_gender_long$session  <- ordered(Q11_gender_long$session,  levels = c("BL", "AL", "AP"))
+Q11_gender_long$gender <- as.factor(Q11_gender_long$gender )
+
+str(Q11_gender_long)
+
+model_Q11_gender <- clm(score ~ gender + session, data = Q11_gender_long)
+model_Q11_gender_interaction <- clm(score ~ gender * session, data = Q11_gender_long)
+Q11_gender_robust_vcov    <- sandwich(model_Q11_gender_interaction)
+Q11_gender_robust_waldtest <- waldtest(model_Q11_gender, model_Q11_gender_interaction, vcov = Q11_gender_robust_vcov )
+
+
+
+
+
+
+writeLines(
+  c("Q1", capture.output(Q1_gender_robust_waldtest),
+    "Q2", capture.output(Q2_gender_robust_waldtest),
+    "Q3", capture.output(Q3_gender_robust_waldtest),
+    "Q4", capture.output(Q4_gender_robust_waldtest),
+    "Q5", capture.output(Q5_gender_robust_waldtest),
+    "Q6", capture.output(Q6_gender_robust_waldtest),
+    "Q7", capture.output(Q7_gender_robust_waldtest),
+    "Q8", capture.output(Q8_gender_robust_waldtest),
+    "Q9", capture.output(Q9_gender_robust_waldtest),
+    "Q10", capture.output(Q10_gender_robust_waldtest),
+    "Q11", capture.output(Q11_gender_robust_waldtest),
+    "FDR vals:",
+    
+    capture.output(p.adjust(
+      c(
+        0.01397,
+        0.8153,
+        0.6817,
+        0.7775,
+        0.9902,
+        0.4826,
+        0.4053,
+        0.5466,
+        0.3308,      
+        0.3426,          
+        0.062), method = "fdr"))), "gender_OReg_interaction_waldtest_out.txt")
+
+
+
+
+
+
+
+### all non-sig - no need for FDR corr.              
 
 
 ####################################################################################################
 ### year
 
 
-wilcox_test_year <- function(Q_table, Q){
+
+OLR_year_tests <- function(Q_table, Q){
+  
   Y2023_Q <- subset(Q_table, Q_table$year == 2023)
   Y2024_Q <- subset(Q_table, Q_table$year == 2024)
-
+  
   Y2023_Q_BL <- subset(Y2023_Q, Y2023_Q$session == "Before_lectures")        
   Y2023_Q_AL <- subset(Y2023_Q, Y2023_Q$session == "After_lectures")        
   Y2023_Q_AP <- subset(Y2023_Q, Y2023_Q$session == "After_prac")
-
+  
   Y2024_Q_BL <- subset(Y2024_Q, Y2024_Q$session == "Before_lectures")        
   Y2024_Q_AL <- subset(Y2024_Q, Y2024_Q$session == "After_lectures")        
   Y2024_Q_AP <- subset(Y2024_Q, Y2024_Q$session == "After_prac")
@@ -746,61 +1407,737 @@ wilcox_test_year <- function(Q_table, Q){
   
   Y2024_Q_BL_v = eval(parse(text=paste('Y2024_Q_BL','$',Q,sep='')))
   Y2024_Q_AL_v = eval(parse(text=paste('Y2024_Q_AL','$',Q,sep='')))  
-  Y2024_Q_AP_v = eval(parse(text=paste('Y2024_Q_AP','$',Q,sep='')))
+  Y2024_Q_AP_v = eval(parse(text=paste('Y2024_Q_AP','$',Q,sep='')))  
   
-  WT_2023_2024_BL   <- wilcox.test(Y2023_Q_BL_v,   Y2024_Q_BL_v)
-  WT_2023_2024_AL   <- wilcox.test(Y2023_Q_AL_v,   Y2024_Q_AL_v)
-  WT_2023_2024_AP   <- wilcox.test(Y2023_Q_AP_v,   Y2024_Q_AP_v)
+  Q_df_BL <- as.data.frame(cbind(
+    c(Y2023_Q_BL_v, Y2024_Q_BL_v),
+    c(rep("2023", length(Y2023_Q_BL_v)), rep("2024", length(Y2024_Q_BL_v)) )))
   
-  print(  WT_2023_2024_BL)
+  colnames(Q_df_BL) <- c("score", "year")
+  Q_df_BL$score    <- ordered(Q_df_BL$score, levels = c(1, 2, 3, 4, 5))
+  Q_df_BL$year   <- as.factor(Q_df_BL$year)
   
-  stats_table <- as.data.frame(cbind(
-    c(Q,Q,Q),
-    c("BL", "AL", "AP"),
-    c(WT_2023_2024_BL$p.value, WT_2023_2024_AL$p.value, WT_2023_2024_AP$p.value)))
+  model_Q_BL <- clm(score ~ year, data = Q_df_BL)
   
-  colnames(stats_table) <- c("Q", "comp", "p")
-  
-  stats_table$FDR <- p.adjust(stats_table$p, method = "fdr")
-  return(stats_table)
-}  
+  #### Robust standard errors (Huber-White Sandwich Estimator)
+  Q_BL_robust_vcov    <- sandwich(model_Q_BL)
+  Q_BL_robust_results <- coeftest(model_Q_BL, vcov. = Q_BL_robust_vcov)
+  ## pairwise using the robust matrix
+  Q_BL_robust_matrix   <- as.matrix(Q_BL_robust_vcov)
+  Q_BL_year_emmeans <- emmeans(model_Q_BL, ~ year, vcov. = Q_BL_robust_matrix)
+  Q_BL_pairs_result <- as.data.frame(pairs(Q_BL_year_emmeans, adjust = "none")) ### no adjust here as adjust with all Qs
 
-wilcox_test_year_Q12Q13 <- function(Q_table, Q){
+  Q_df_AL <- as.data.frame(cbind(
+    c(Y2023_Q_AL_v, Y2024_Q_AL_v),
+    c(rep("2023", length(Y2023_Q_AL_v)), rep("2024", length(Y2024_Q_AL_v)) )))
+  
+  colnames(Q_df_AL) <- c("score", "year")
+  Q_df_AL$score    <- ordered(Q_df_AL$score, levels = c(1, 2, 3, 4, 5))
+  Q_df_AL$year   <- as.factor(Q_df_AL$year)
+  
+  model_Q_AL <- clm(score ~ year, data = Q_df_AL)
+  
+  #### Robust standard errors (Huber-White Sandwich Estimator)
+  Q_AL_robust_vcov    <- sandwich(model_Q_AL)
+  Q_AL_robust_results <- coeftest(model_Q_AL, vcov. = Q_AL_robust_vcov)
+  ## pairwise using the robust matrix
+  Q_AL_robust_matrix   <- as.matrix(Q_AL_robust_vcov)
+  Q_AL_year_emmeans <- emmeans(model_Q_AL, ~ year, vcov. = Q_AL_robust_matrix)
+  Q_AL_pairs_result <- as.data.frame(pairs(Q_AL_year_emmeans, adjust = "none")) ### no adjust here as adjust with all Qs
+  
+  Q_df_AP <- as.data.frame(cbind(
+    c(Y2023_Q_AP_v, Y2024_Q_AP_v),
+    c(rep("2023", length(Y2023_Q_AP_v)), rep("2024", length(Y2024_Q_AP_v)) )))
+  
+  colnames(Q_df_AP) <- c("score", "year")
+  Q_df_AP$score    <- ordered(Q_df_AP$score, levels = c(1, 2, 3, 4, 5))
+  Q_df_AP$year   <- as.factor(Q_df_AP$year)
+  
+  model_Q_AP <- clm(score ~ year, data = Q_df_AP)
+  
+  #### Robust standard errors (Huber-White Sandwich Estimator)
+  Q_AP_robust_vcov    <- sandwich(model_Q_AP)
+  Q_AP_robust_results <- coeftest(model_Q_AP, vcov. = Q_AP_robust_vcov)
+  ## pairwise using the robust matrix
+  Q_AP_robust_matrix   <- as.matrix(Q_AP_robust_vcov)
+  Q_AP_year_emmeans <- emmeans(model_Q_AP, ~ year, vcov. = Q_AP_robust_matrix)
+  Q_AP_pairs_result <- as.data.frame(pairs(Q_AP_year_emmeans, adjust = "none")) ### no adjust here as adjust with all Qs
+  
+  
+  Q_pairs_result <- rbind(Q_BL_pairs_result, Q_AL_pairs_result, Q_AP_pairs_result)
+  
+  
+  Q_pairs_result$Q <- c(Q,Q,Q)
+  Q_pairs_result$session <- c("BL", "AL", "AP")
+  
+  return(Q_pairs_result)
+}
+
+
+OLR_year_tests_Q12Q13 <- function(Q_table, Q){
+  
   Y2023_Q <- subset(Q_table, Q_table$year == 2023)
   Y2024_Q <- subset(Q_table, Q_table$year == 2024)
- 
+  
   Y2023_Q_AP <- subset(Y2023_Q, Y2023_Q$session == "After_prac")
   Y2024_Q_AP <- subset(Y2024_Q, Y2024_Q$session == "After_prac")
+
   Y2023_Q_AP_v = eval(parse(text=paste('Y2023_Q_AP','$',Q,sep='')))
-  Y2024_Q_AP_v = eval(parse(text=paste('Y2024_Q_AP','$',Q,sep='')))
-  WT_2023_2024_AP   <- wilcox.test(Y2023_Q_AP_v,   Y2024_Q_AP_v)
-  
-  stats_table <- as.data.frame(cbind(
-    c(Q),
-    c( "AP"),
-    c(WT_2023_2024_AP$p.value)))
-  
-  colnames(stats_table) <- c("Q", "comp", "p")
-  
-  stats_table$FDR <- p.adjust(stats_table$p, method = "fdr")
-  return(stats_table)
-}  
+  Y2024_Q_AP_v = eval(parse(text=paste('Y2024_Q_AP','$',Q,sep='')))  
 
-year_stats <- rbind(
-wilcox_test_year(dat_all_BZ, "Q1"),
-wilcox_test_year(dat_all_BZ, "Q2"),  
-wilcox_test_year(dat_all_BZ, "Q3"),
-wilcox_test_year(dat_all_BZ, "Q4"),  
-wilcox_test_year(dat_all_BZ, "Q5"),  
-wilcox_test_year(dat_all_BZ, "Q6"),  
-wilcox_test_year(dat_all_BZ, "Q7"),  
-wilcox_test_year(dat_all_BZ, "Q8"),  
-wilcox_test_year(dat_all_BZ, "Q9"),  
-wilcox_test_year(dat_all_BZ, "Q10"),  
-wilcox_test_year(dat_all_BZ, "Q11"),  
-wilcox_test_year_Q12Q13(dat_all_BZ, "Q12"),
-wilcox_test_year_Q12Q13(dat_all_BZ, "Q13"))
+  Q_df_AP <- as.data.frame(cbind(
+    c(Y2023_Q_AP_v, Y2024_Q_AP_v),
+    c(rep("2023", length(Y2023_Q_AP_v)), rep("2024", length(Y2024_Q_AP_v)) )))
+  
+  colnames(Q_df_AP) <- c("score", "year")
+  Q_df_AP$score    <- ordered(Q_df_AP$score, levels = c(1, 2, 3, 4, 5))
+  Q_df_AP$year   <- as.factor(Q_df_AP$year)
+  
+  model_Q_AP <- clm(score ~ year, data = Q_df_AP)
+  
+  #### Robust standard errors (Huber-White Sandwich Estimator)
+  Q_AP_robust_vcov    <- sandwich(model_Q_AP)
+  Q_AP_robust_results <- coeftest(model_Q_AP, vcov. = Q_AP_robust_vcov)
+  ## pairwise using the robust matrix
+  Q_AP_robust_matrix   <- as.matrix(Q_AP_robust_vcov)
+  Q_AP_year_emmeans <- emmeans(model_Q_AP, ~ year, vcov. = Q_AP_robust_matrix)
+  Q_AP_pairs_result <- as.data.frame(pairs(Q_AP_year_emmeans, adjust = "none")) ### no adjust here as adjust with all Qs
+  
+  
+  Q_pairs_result <- rbind(Q_AP_pairs_result)
+  
+  
+  Q_pairs_result$Q <- c(Q)
+  Q_pairs_result$session <- c( "AP")
+  
+  return(Q_pairs_result)
+}
 
-year_stats$FDRall <- p.adjust(year_stats$p, method = "fdr")
-write.csv(year_stats, "all_20232024_year_stats.csv")
+year_all_OLRout <- rbind(
+  OLR_year_tests(dat_all_BZ, "Q1"),
+  OLR_year_tests(dat_all_BZ, "Q2"),  
+  OLR_year_tests(dat_all_BZ, "Q3"),
+  OLR_year_tests(dat_all_BZ, "Q4"),  
+  OLR_year_tests(dat_all_BZ, "Q5"),  
+  OLR_year_tests(dat_all_BZ, "Q6"),  
+  OLR_year_tests(dat_all_BZ, "Q7"),  
+  OLR_year_tests(dat_all_BZ, "Q8"),  
+  OLR_year_tests(dat_all_BZ, "Q9"),  
+  OLR_year_tests(dat_all_BZ, "Q10"),  
+  OLR_year_tests(dat_all_BZ, "Q11"),  
+  OLR_year_tests_Q12Q13(dat_all_BZ, "Q12"),
+  OLR_year_tests_Q12Q13(dat_all_BZ, "Q13"))
+
+year_all_OLRout$FDRall <- p.adjust(year_all_OLRout$p, method = "fdr")
+write.csv(year_all_OLRout, "year_all_OLRout.csv")
+
+
+
+##################################################################################################
+################# effect sizes with bootstapped CIs
+
+get_effectsize_year <- function(Q_table, Q, X){
+    
+    Y2023_Q <- subset(Q_table, Q_table$year == 2023)
+    Y2024_Q <- subset(Q_table, Q_table$year == 2024)
+    
+    Y2023_Q_BL <- subset(Y2023_Q, Y2023_Q$session == "Before_lectures")        
+    Y2023_Q_AL <- subset(Y2023_Q, Y2023_Q$session == "After_lectures")        
+    Y2023_Q_AP <- subset(Y2023_Q, Y2023_Q$session == "After_prac")
+    
+    Y2024_Q_BL <- subset(Y2024_Q, Y2024_Q$session == "Before_lectures")        
+    Y2024_Q_AL <- subset(Y2024_Q, Y2024_Q$session == "After_lectures")        
+    Y2024_Q_AP <- subset(Y2024_Q, Y2024_Q$session == "After_prac")
+    
+    Y2023_Q_BL_v = eval(parse(text=paste('Y2023_Q_BL','$',Q,sep='')))
+    Y2023_Q_AL_v = eval(parse(text=paste('Y2023_Q_AL','$',Q,sep='')))  
+    Y2023_Q_AP_v = eval(parse(text=paste('Y2023_Q_AP','$',Q,sep='')))
+    
+    Y2024_Q_BL_v = eval(parse(text=paste('Y2024_Q_BL','$',Q,sep='')))
+    Y2024_Q_AL_v = eval(parse(text=paste('Y2024_Q_AL','$',Q,sep='')))  
+    Y2024_Q_AP_v = eval(parse(text=paste('Y2024_Q_AP','$',Q,sep='')))  
+    
+    WT_2023_BL_v_2024_BL_df <- data.frame(
+      score = c(Y2023_Q_BL_v, Y2024_Q_BL_v),
+      group = ordered(factor(c(rep("2023", length(Y2023_Q_BL_v)), rep("2024", length(Y2024_Q_BL_v)))), levels = c("2023", "2024"))
+    )
+    
+    WT_2023_BL_v_2024_BL_result <- as.data.frame(cohens_d(
+      data = WT_2023_BL_v_2024_BL_df, 
+      formula = score ~ group, 
+      paired = FALSE,
+      ci = TRUE, 
+      nboot = X, 
+      ci.type = "perc"
+    ))
+    
+    WT_2023_AL_v_2024_AL_df <- data.frame(
+      score = c(Y2023_Q_AL_v, Y2024_Q_AL_v),
+      group = ordered(factor(c(rep("2023", length(Y2023_Q_AL_v)), rep("2024", length(Y2024_Q_AL_v)))), levels = c("2023", "2024"))
+    )
+    
+    WT_2023_AL_v_2024_AL_result <- as.data.frame(cohens_d(
+      data = WT_2023_AL_v_2024_AL_df, 
+      formula = score ~ group, 
+      paired = FALSE,
+      ci = TRUE, 
+      nboot = X, 
+      ci.type = "perc"
+    ))
+    
+    WT_2023_AP_v_2024_AP_df <- data.frame(
+      score = c(Y2023_Q_AP_v, Y2024_Q_AP_v),
+      group = ordered(factor(c(rep("2023", length(Y2023_Q_AP_v)), rep("2024", length(Y2024_Q_AP_v)))), levels = c("2023", "2024"))
+    )
+    
+    WT_2023_AP_v_2024_AP_result <- as.data.frame(cohens_d(
+      data = WT_2023_AP_v_2024_AP_df, 
+      formula = score ~ group, 
+      paired = FALSE,
+      ci = TRUE, 
+      nboot = X, 
+      ci.type = "perc"
+    ))
+    
+    out_table <- as.data.frame(rbind(WT_2023_BL_v_2024_BL_result, WT_2023_AL_v_2024_AL_result, WT_2023_AP_v_2024_AP_result))
+  
+  out_table$Q <- c(rep(Q, 3))
+  out_table$session <- c("BL", "AL", "AP")
+  return(out_table)
+}
+
+get_effectsize_year_Q12Q13 <- function(Q_table, Q, X){
+  
+  Y2023_Q <- subset(Q_table, Q_table$year == 2023)
+  Y2024_Q <- subset(Q_table, Q_table$year == 2024)
+  
+  Y2023_Q_AP <- subset(Y2023_Q, Y2023_Q$session == "After_prac")
+  Y2024_Q_AP <- subset(Y2024_Q, Y2024_Q$session == "After_prac")
+  
+  Y2023_Q_AP_v = eval(parse(text=paste('Y2023_Q_AP','$',Q,sep='')))
+  Y2024_Q_AP_v = eval(parse(text=paste('Y2024_Q_AP','$',Q,sep='')))  
+  
+  WT_2023_AP_v_2024_AP_df <- data.frame(
+    score = c(Y2023_Q_AP_v, Y2024_Q_AP_v),
+    group = ordered(factor(c(rep("2023", length(Y2023_Q_AP_v)), rep("2024", length(Y2024_Q_AP_v)))), levels = c("2023", "2024"))
+  )
+  
+  WT_2023_AP_v_2024_AP_result <- as.data.frame(cohens_d(
+    data = WT_2023_AP_v_2024_AP_df, 
+    formula = score ~ group, 
+    paired = FALSE,
+    ci = TRUE, 
+    nboot = X, 
+    ci.type = "perc"
+  ))
+  
+  out_table <- as.data.frame(rbind(WT_2023_AP_v_2024_AP_result))
+  
+  out_table$Q <- c(rep(Q, 1))
+  out_table$session <- c("AP")
+  return(out_table)
+}
+
+use_seed = 42
+set.seed(use_seed )
+
+year_all_effectsizes <- rbind(
+  get_effectsize_year(dat_all_BZ, "Q1", Nboot),
+  get_effectsize_year(dat_all_BZ, "Q2", Nboot),  
+  get_effectsize_year(dat_all_BZ, "Q3", Nboot),
+  get_effectsize_year(dat_all_BZ, "Q4", Nboot),  
+  get_effectsize_year(dat_all_BZ, "Q5", Nboot),  
+  get_effectsize_year(dat_all_BZ, "Q6", Nboot),  
+  get_effectsize_year(dat_all_BZ, "Q7", Nboot),  
+  get_effectsize_year(dat_all_BZ, "Q8", Nboot),  
+  get_effectsize_year(dat_all_BZ, "Q9", Nboot),  
+  get_effectsize_year(dat_all_BZ, "Q10", Nboot),  
+  get_effectsize_year(dat_all_BZ, "Q11", Nboot),  
+  get_effectsize_year_Q12Q13(dat_all_BZ, "Q12", Nboot),
+  get_effectsize_year_Q12Q13(dat_all_BZ, "Q13", Nboot))
+
+write.csv(year_all_effectsizes, paste("year_all_effectsizes", Nboot, "seed", use_seed, ".csv", sep = ""))
+
+
+
+############### test for an interaction for all Qs
+
+
+dat_all_BZ_2023 <- subset(dat_all_BZ, dat_all_BZ$year == 2023)
+dat_all_BZ_2024 <- subset(dat_all_BZ, dat_all_BZ$year == 2024)
+
+dat_all_BZ_2023_BL <- subset(dat_all_BZ_2023, dat_all_BZ_2023$session == "Before_lectures")        
+dat_all_BZ_2023_AL <- subset(dat_all_BZ_2023, dat_all_BZ_2023$session == "After_lectures")        
+dat_all_BZ_2023_AP <- subset(dat_all_BZ_2023, dat_all_BZ_2023$session == "After_prac")
+
+dat_all_BZ_2024_BL <- subset(dat_all_BZ_2024, dat_all_BZ_2024$session == "Before_lectures")        
+dat_all_BZ_2024_AL <- subset(dat_all_BZ_2024, dat_all_BZ_2024$session == "After_lectures")        
+dat_all_BZ_2024_AP <- subset(dat_all_BZ_2024, dat_all_BZ_2024$session == "After_prac")
+
+
+Q1_year_long <- as.data.frame(cbind(
+  c(
+    dat_all_BZ_2023_BL$Q1,
+    dat_all_BZ_2024_BL$Q1,
+    dat_all_BZ_2023_AL$Q1, 
+    dat_all_BZ_2024_AL$Q1,
+    dat_all_BZ_2023_AP$Q1,
+    dat_all_BZ_2024_AP$Q1),
+  
+  c(
+    rep("2023", length(dat_all_BZ_2023_BL$Q1)),
+    rep("2024", length(dat_all_BZ_2024_BL$Q1)),
+    rep("2023", length(dat_all_BZ_2023_AL$Q1)), 
+    rep("2024", length(dat_all_BZ_2024_AL$Q1)),
+    rep("2023", length(dat_all_BZ_2023_AP$Q1)),
+    rep("2024", length(dat_all_BZ_2024_AP$Q1))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_2023_BL$Q1)),
+    rep("BL", length(dat_all_BZ_2024_BL$Q1)),
+    rep("AL", length(dat_all_BZ_2023_AL$Q1)), 
+    rep("AL", length(dat_all_BZ_2024_AL$Q1)),
+    rep("AP", length(dat_all_BZ_2023_AP$Q1)),
+    rep("AP", length(dat_all_BZ_2024_AP$Q1)))))
+
+
+
+colnames(Q1_year_long) <- c("score", "year", "session")
+Q1_year_long$score    <- ordered(Q1_year_long$score, levels = c(1, 2, 3, 4, 5))
+Q1_year_long$session  <- as.factor(Q1_year_long$session)
+Q1_year_long$year     <- as.factor(Q1_year_long$year )
+
+model_Q1_year             <- clm(score ~ year + session, data = Q1_year_long)
+model_Q1_year_interaction <- clm(score ~ year * session, data = Q1_year_long)
+Q1_year_robust_vcov    <- sandwich(model_Q1_year_interaction)
+Q1_year_robust_waldtest <- waldtest(model_Q1_year, model_Q1_year_interaction, vcov = Q1_year_robust_vcov )
+
+
+Q2_year_long <- as.data.frame(cbind(
+  c(
+    dat_all_BZ_2023_BL$Q2,
+    dat_all_BZ_2024_BL$Q2,
+    dat_all_BZ_2023_AL$Q2, 
+    dat_all_BZ_2024_AL$Q2,
+    dat_all_BZ_2023_AP$Q2,
+    dat_all_BZ_2024_AP$Q2),
+  
+  c(
+    rep("2023", length(dat_all_BZ_2023_BL$Q2)),
+    rep("2024", length(dat_all_BZ_2024_BL$Q2)),
+    rep("2023", length(dat_all_BZ_2023_AL$Q2)), 
+    rep("2024", length(dat_all_BZ_2024_AL$Q2)),
+    rep("2023", length(dat_all_BZ_2023_AP$Q2)),
+    rep("2024", length(dat_all_BZ_2024_AP$Q2))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_2023_BL$Q2)),
+    rep("BL", length(dat_all_BZ_2024_BL$Q2)),
+    rep("AL", length(dat_all_BZ_2023_AL$Q2)), 
+    rep("AL", length(dat_all_BZ_2024_AL$Q2)),
+    rep("AP", length(dat_all_BZ_2023_AP$Q2)),
+    rep("AP", length(dat_all_BZ_2024_AP$Q2)))))
+
+
+
+colnames(Q2_year_long) <- c("score", "year", "session")
+Q2_year_long$score    <- ordered(Q2_year_long$score, levels = c(1, 2, 3, 4, 5))
+Q2_year_long$session  <- as.factor(Q2_year_long$session)
+Q2_year_long$year     <- as.factor(Q2_year_long$year )
+
+model_Q2_year             <- clm(score ~ year + session, data = Q2_year_long)
+model_Q2_year_interaction <- clm(score ~ year * session, data = Q2_year_long)
+Q2_year_robust_vcov    <- sandwich(model_Q2_year_interaction)
+Q2_year_robust_waldtest <- waldtest(model_Q2_year, model_Q2_year_interaction, vcov = Q2_year_robust_vcov )
+
+Q3_year_long <- as.data.frame(cbind(
+  c(
+    dat_all_BZ_2023_BL$Q3,
+    dat_all_BZ_2024_BL$Q3,
+    dat_all_BZ_2023_AL$Q3, 
+    dat_all_BZ_2024_AL$Q3,
+    dat_all_BZ_2023_AP$Q3,
+    dat_all_BZ_2024_AP$Q3),
+  
+  c(
+    rep("2023", length(dat_all_BZ_2023_BL$Q3)),
+    rep("2024", length(dat_all_BZ_2024_BL$Q3)),
+    rep("2023", length(dat_all_BZ_2023_AL$Q3)), 
+    rep("2024", length(dat_all_BZ_2024_AL$Q3)),
+    rep("2023", length(dat_all_BZ_2023_AP$Q3)),
+    rep("2024", length(dat_all_BZ_2024_AP$Q3))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_2023_BL$Q3)),
+    rep("BL", length(dat_all_BZ_2024_BL$Q3)),
+    rep("AL", length(dat_all_BZ_2023_AL$Q3)), 
+    rep("AL", length(dat_all_BZ_2024_AL$Q3)),
+    rep("AP", length(dat_all_BZ_2023_AP$Q3)),
+    rep("AP", length(dat_all_BZ_2024_AP$Q3)))))
+
+
+
+colnames(Q3_year_long) <- c("score", "year", "session")
+Q3_year_long$score    <- ordered(Q3_year_long$score, levels = c(1, 2, 3, 4, 5))
+Q3_year_long$session  <- as.factor(Q3_year_long$session)
+Q3_year_long$year     <- as.factor(Q3_year_long$year )
+
+model_Q3_year             <- clm(score ~ year + session, data = Q3_year_long)
+model_Q3_year_interaction <- clm(score ~ year * session, data = Q3_year_long)
+Q3_year_robust_vcov    <- sandwich(model_Q3_year_interaction)
+Q3_year_robust_waldtest <- waldtest(model_Q3_year, model_Q3_year_interaction, vcov = Q3_year_robust_vcov )
+
+
+Q4_year_long <- as.data.frame(cbind(
+  c(
+    dat_all_BZ_2023_BL$Q4,
+    dat_all_BZ_2024_BL$Q4,
+    dat_all_BZ_2023_AL$Q4, 
+    dat_all_BZ_2024_AL$Q4,
+    dat_all_BZ_2023_AP$Q4,
+    dat_all_BZ_2024_AP$Q4),
+  
+  c(
+    rep("2023", length(dat_all_BZ_2023_BL$Q4)),
+    rep("2024", length(dat_all_BZ_2024_BL$Q4)),
+    rep("2023", length(dat_all_BZ_2023_AL$Q4)), 
+    rep("2024", length(dat_all_BZ_2024_AL$Q4)),
+    rep("2023", length(dat_all_BZ_2023_AP$Q4)),
+    rep("2024", length(dat_all_BZ_2024_AP$Q4))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_2023_BL$Q4)),
+    rep("BL", length(dat_all_BZ_2024_BL$Q4)),
+    rep("AL", length(dat_all_BZ_2023_AL$Q4)), 
+    rep("AL", length(dat_all_BZ_2024_AL$Q4)),
+    rep("AP", length(dat_all_BZ_2023_AP$Q4)),
+    rep("AP", length(dat_all_BZ_2024_AP$Q4)))))
+
+
+
+colnames(Q4_year_long) <- c("score", "year", "session")
+Q4_year_long$score    <- ordered(Q4_year_long$score, levels = c(1, 2, 3, 4, 5))
+Q4_year_long$session  <- as.factor(Q4_year_long$session)
+Q4_year_long$year     <- as.factor(Q4_year_long$year )
+
+model_Q4_year             <- clm(score ~ year + session, data = Q4_year_long)
+model_Q4_year_interaction <- clm(score ~ year * session, data = Q4_year_long)
+Q4_year_robust_vcov    <- sandwich(model_Q4_year_interaction)
+Q4_year_robust_waldtest <- waldtest(model_Q4_year, model_Q4_year_interaction, vcov = Q4_year_robust_vcov )
+
+
+Q5_year_long <- as.data.frame(cbind(
+  c(
+    dat_all_BZ_2023_BL$Q5,
+    dat_all_BZ_2024_BL$Q5,
+    dat_all_BZ_2023_AL$Q5, 
+    dat_all_BZ_2024_AL$Q5,
+    dat_all_BZ_2023_AP$Q5,
+    dat_all_BZ_2024_AP$Q5),
+  
+  c(
+    rep("2023", length(dat_all_BZ_2023_BL$Q5)),
+    rep("2024", length(dat_all_BZ_2024_BL$Q5)),
+    rep("2023", length(dat_all_BZ_2023_AL$Q5)), 
+    rep("2024", length(dat_all_BZ_2024_AL$Q5)),
+    rep("2023", length(dat_all_BZ_2023_AP$Q5)),
+    rep("2024", length(dat_all_BZ_2024_AP$Q5))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_2023_BL$Q5)),
+    rep("BL", length(dat_all_BZ_2024_BL$Q5)),
+    rep("AL", length(dat_all_BZ_2023_AL$Q5)), 
+    rep("AL", length(dat_all_BZ_2024_AL$Q5)),
+    rep("AP", length(dat_all_BZ_2023_AP$Q5)),
+    rep("AP", length(dat_all_BZ_2024_AP$Q5)))))
+
+
+
+colnames(Q5_year_long) <- c("score", "year", "session")
+Q5_year_long$score    <- ordered(Q5_year_long$score, levels = c(1, 2, 3, 4, 5))
+Q5_year_long$session  <- as.factor(Q5_year_long$session)
+Q5_year_long$year     <- as.factor(Q5_year_long$year )
+
+model_Q5_year             <- clm(score ~ year + session, data = Q5_year_long)
+model_Q5_year_interaction <- clm(score ~ year * session, data = Q5_year_long)
+Q5_year_robust_vcov    <- sandwich(model_Q5_year_interaction)
+Q5_year_robust_waldtest <- waldtest(model_Q5_year, model_Q5_year_interaction, vcov = Q5_year_robust_vcov )
+
+
+Q6_year_long <- as.data.frame(cbind(
+  c(
+    dat_all_BZ_2023_BL$Q6,
+    dat_all_BZ_2024_BL$Q6,
+    dat_all_BZ_2023_AL$Q6, 
+    dat_all_BZ_2024_AL$Q6,
+    dat_all_BZ_2023_AP$Q6,
+    dat_all_BZ_2024_AP$Q6),
+  
+  c(
+    rep("2023", length(dat_all_BZ_2023_BL$Q6)),
+    rep("2024", length(dat_all_BZ_2024_BL$Q6)),
+    rep("2023", length(dat_all_BZ_2023_AL$Q6)), 
+    rep("2024", length(dat_all_BZ_2024_AL$Q6)),
+    rep("2023", length(dat_all_BZ_2023_AP$Q6)),
+    rep("2024", length(dat_all_BZ_2024_AP$Q6))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_2023_BL$Q6)),
+    rep("BL", length(dat_all_BZ_2024_BL$Q6)),
+    rep("AL", length(dat_all_BZ_2023_AL$Q6)), 
+    rep("AL", length(dat_all_BZ_2024_AL$Q6)),
+    rep("AP", length(dat_all_BZ_2023_AP$Q6)),
+    rep("AP", length(dat_all_BZ_2024_AP$Q6)))))
+
+
+
+colnames(Q6_year_long) <- c("score", "year", "session")
+Q6_year_long$score    <- ordered(Q6_year_long$score, levels = c(1, 2, 3, 4, 5))
+Q6_year_long$session  <- as.factor(Q6_year_long$session)
+Q6_year_long$year     <- as.factor(Q6_year_long$year )
+
+model_Q6_year             <- clm(score ~ year + session, data = Q6_year_long)
+model_Q6_year_interaction <- clm(score ~ year * session, data = Q6_year_long)
+Q6_year_robust_vcov    <- sandwich(model_Q6_year_interaction)
+Q6_year_robust_waldtest <- waldtest(model_Q6_year, model_Q6_year_interaction, vcov = Q6_year_robust_vcov )
+
+
+Q7_year_long <- as.data.frame(cbind(
+  c(
+    dat_all_BZ_2023_BL$Q7,
+    dat_all_BZ_2024_BL$Q7,
+    dat_all_BZ_2023_AL$Q7, 
+    dat_all_BZ_2024_AL$Q7,
+    dat_all_BZ_2023_AP$Q7,
+    dat_all_BZ_2024_AP$Q7),
+  
+  c(
+    rep("2023", length(dat_all_BZ_2023_BL$Q7)),
+    rep("2024", length(dat_all_BZ_2024_BL$Q7)),
+    rep("2023", length(dat_all_BZ_2023_AL$Q7)), 
+    rep("2024", length(dat_all_BZ_2024_AL$Q7)),
+    rep("2023", length(dat_all_BZ_2023_AP$Q7)),
+    rep("2024", length(dat_all_BZ_2024_AP$Q7))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_2023_BL$Q7)),
+    rep("BL", length(dat_all_BZ_2024_BL$Q7)),
+    rep("AL", length(dat_all_BZ_2023_AL$Q7)), 
+    rep("AL", length(dat_all_BZ_2024_AL$Q7)),
+    rep("AP", length(dat_all_BZ_2023_AP$Q7)),
+    rep("AP", length(dat_all_BZ_2024_AP$Q7)))))
+
+
+
+colnames(Q7_year_long) <- c("score", "year", "session")
+Q7_year_long$score    <- ordered(Q7_year_long$score, levels = c(1, 2, 3, 4, 5))
+Q7_year_long$session  <- as.factor(Q7_year_long$session)
+Q7_year_long$year     <- as.factor(Q7_year_long$year )
+
+model_Q7_year             <- clm(score ~ year + session, data = Q7_year_long)
+model_Q7_year_interaction <- clm(score ~ year * session, data = Q7_year_long)
+Q7_year_robust_vcov    <- sandwich(model_Q7_year_interaction)
+Q7_year_robust_waldtest <- waldtest(model_Q7_year, model_Q7_year_interaction, vcov = Q7_year_robust_vcov )
+
+
+Q8_year_long <- as.data.frame(cbind(
+  c(
+    dat_all_BZ_2023_BL$Q8,
+    dat_all_BZ_2024_BL$Q8,
+    dat_all_BZ_2023_AL$Q8, 
+    dat_all_BZ_2024_AL$Q8,
+    dat_all_BZ_2023_AP$Q8,
+    dat_all_BZ_2024_AP$Q8),
+  
+  c(
+    rep("2023", length(dat_all_BZ_2023_BL$Q8)),
+    rep("2024", length(dat_all_BZ_2024_BL$Q8)),
+    rep("2023", length(dat_all_BZ_2023_AL$Q8)), 
+    rep("2024", length(dat_all_BZ_2024_AL$Q8)),
+    rep("2023", length(dat_all_BZ_2023_AP$Q8)),
+    rep("2024", length(dat_all_BZ_2024_AP$Q8))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_2023_BL$Q8)),
+    rep("BL", length(dat_all_BZ_2024_BL$Q8)),
+    rep("AL", length(dat_all_BZ_2023_AL$Q8)), 
+    rep("AL", length(dat_all_BZ_2024_AL$Q8)),
+    rep("AP", length(dat_all_BZ_2023_AP$Q8)),
+    rep("AP", length(dat_all_BZ_2024_AP$Q8)))))
+
+
+
+colnames(Q8_year_long) <- c("score", "year", "session")
+Q8_year_long$score    <- ordered(Q8_year_long$score, levels = c(1, 2, 3, 4, 5))
+Q8_year_long$session  <- as.factor(Q8_year_long$session)
+Q8_year_long$year     <- as.factor(Q8_year_long$year )
+
+model_Q8_year             <- clm(score ~ year + session, data = Q8_year_long)
+model_Q8_year_interaction <- clm(score ~ year * session, data = Q8_year_long)
+Q8_year_robust_vcov    <- sandwich(model_Q8_year_interaction)
+Q8_year_robust_waldtest <- waldtest(model_Q8_year, model_Q8_year_interaction, vcov = Q8_year_robust_vcov )
+
+
+Q9_year_long <- as.data.frame(cbind(
+  c(
+    dat_all_BZ_2023_BL$Q9,
+    dat_all_BZ_2024_BL$Q9,
+    dat_all_BZ_2023_AL$Q9, 
+    dat_all_BZ_2024_AL$Q9,
+    dat_all_BZ_2023_AP$Q9,
+    dat_all_BZ_2024_AP$Q9),
+  
+  c(
+    rep("2023", length(dat_all_BZ_2023_BL$Q9)),
+    rep("2024", length(dat_all_BZ_2024_BL$Q9)),
+    rep("2023", length(dat_all_BZ_2023_AL$Q9)), 
+    rep("2024", length(dat_all_BZ_2024_AL$Q9)),
+    rep("2023", length(dat_all_BZ_2023_AP$Q9)),
+    rep("2024", length(dat_all_BZ_2024_AP$Q9))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_2023_BL$Q9)),
+    rep("BL", length(dat_all_BZ_2024_BL$Q9)),
+    rep("AL", length(dat_all_BZ_2023_AL$Q9)), 
+    rep("AL", length(dat_all_BZ_2024_AL$Q9)),
+    rep("AP", length(dat_all_BZ_2023_AP$Q9)),
+    rep("AP", length(dat_all_BZ_2024_AP$Q9)))))
+
+
+
+colnames(Q9_year_long) <- c("score", "year", "session")
+Q9_year_long$score    <- ordered(Q9_year_long$score, levels = c(1, 2, 3, 4, 5))
+Q9_year_long$session  <- as.factor(Q9_year_long$session)
+Q9_year_long$year     <- as.factor(Q9_year_long$year )
+
+model_Q9_year             <- clm(score ~ year + session, data = Q9_year_long)
+model_Q9_year_interaction <- clm(score ~ year * session, data = Q9_year_long)
+Q9_year_robust_vcov    <- sandwich(model_Q9_year_interaction)
+Q9_year_robust_waldtest <- waldtest(model_Q9_year, model_Q9_year_interaction, vcov = Q9_year_robust_vcov )
+
+
+Q10_year_long <- as.data.frame(cbind(
+  c(
+    dat_all_BZ_2023_BL$Q10,
+    dat_all_BZ_2024_BL$Q10,
+    dat_all_BZ_2023_AL$Q10, 
+    dat_all_BZ_2024_AL$Q10,
+    dat_all_BZ_2023_AP$Q10,
+    dat_all_BZ_2024_AP$Q10),
+  
+  c(
+    rep("2023", length(dat_all_BZ_2023_BL$Q10)),
+    rep("2024", length(dat_all_BZ_2024_BL$Q10)),
+    rep("2023", length(dat_all_BZ_2023_AL$Q10)), 
+    rep("2024", length(dat_all_BZ_2024_AL$Q10)),
+    rep("2023", length(dat_all_BZ_2023_AP$Q10)),
+    rep("2024", length(dat_all_BZ_2024_AP$Q10))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_2023_BL$Q10)),
+    rep("BL", length(dat_all_BZ_2024_BL$Q10)),
+    rep("AL", length(dat_all_BZ_2023_AL$Q10)), 
+    rep("AL", length(dat_all_BZ_2024_AL$Q10)),
+    rep("AP", length(dat_all_BZ_2023_AP$Q10)),
+    rep("AP", length(dat_all_BZ_2024_AP$Q10)))))
+
+
+
+colnames(Q10_year_long) <- c("score", "year", "session")
+Q10_year_long$score    <- ordered(Q10_year_long$score, levels = c(1, 2, 3, 4, 5))
+Q10_year_long$session  <- as.factor(Q10_year_long$session)
+Q10_year_long$year     <- as.factor(Q10_year_long$year )
+
+model_Q10_year             <- clm(score ~ year + session, data = Q10_year_long)
+model_Q10_year_interaction <- clm(score ~ year * session, data = Q10_year_long)
+Q10_year_robust_vcov    <- sandwich(model_Q10_year_interaction)
+Q10_year_robust_waldtest <- waldtest(model_Q10_year, model_Q10_year_interaction, vcov = Q10_year_robust_vcov )
+
+
+Q11_year_long <- as.data.frame(cbind(
+  c(
+    dat_all_BZ_2023_BL$Q11,
+    dat_all_BZ_2024_BL$Q11,
+    dat_all_BZ_2023_AL$Q11, 
+    dat_all_BZ_2024_AL$Q11,
+    dat_all_BZ_2023_AP$Q11,
+    dat_all_BZ_2024_AP$Q11),
+  
+  c(
+    rep("2023", length(dat_all_BZ_2023_BL$Q11)),
+    rep("2024", length(dat_all_BZ_2024_BL$Q11)),
+    rep("2023", length(dat_all_BZ_2023_AL$Q11)), 
+    rep("2024", length(dat_all_BZ_2024_AL$Q11)),
+    rep("2023", length(dat_all_BZ_2023_AP$Q11)),
+    rep("2024", length(dat_all_BZ_2024_AP$Q11))),
+  
+  c(
+    rep("BL", length(dat_all_BZ_2023_BL$Q11)),
+    rep("BL", length(dat_all_BZ_2024_BL$Q11)),
+    rep("AL", length(dat_all_BZ_2023_AL$Q11)), 
+    rep("AL", length(dat_all_BZ_2024_AL$Q11)),
+    rep("AP", length(dat_all_BZ_2023_AP$Q11)),
+    rep("AP", length(dat_all_BZ_2024_AP$Q11)))))
+
+
+
+colnames(Q11_year_long) <- c("score", "year", "session")
+Q11_year_long$score    <- ordered(Q11_year_long$score, levels = c(1, 2, 3, 4, 5))
+Q11_year_long$session  <- as.factor(Q11_year_long$session)
+Q11_year_long$year     <- as.factor(Q11_year_long$year )
+
+model_Q11_year             <- clm(score ~ year + session, data = Q11_year_long)
+model_Q11_year_interaction <- clm(score ~ year * session, data = Q11_year_long)
+Q11_year_robust_vcov    <- sandwich(model_Q11_year_interaction)
+Q11_year_robust_waldtest <- waldtest(model_Q11_year, model_Q11_year_interaction, vcov = Q11_year_robust_vcov )
+
+
+
+
+
+
+
+writeLines(
+  c("Q1", capture.output(Q1_year_robust_waldtest),
+    "Q2", capture.output(Q2_year_robust_waldtest),
+    "Q3", capture.output(Q3_year_robust_waldtest),
+    "Q4", capture.output(Q4_year_robust_waldtest),
+    "Q5", capture.output(Q5_year_robust_waldtest),
+    "Q6", capture.output(Q6_year_robust_waldtest),
+    "Q7", capture.output(Q7_year_robust_waldtest),
+    "Q8", capture.output(Q8_year_robust_waldtest),
+    "Q9", capture.output(Q9_year_robust_waldtest),
+    "Q10", capture.output(Q10_year_robust_waldtest),
+    "Q11", capture.output(Q11_year_robust_waldtest)), "Year_OReg_interaction_out.txt")
+
+                 
+### FDR corr.
+
+p.adjust(c(0.9412,
+         0.7189,
+         0.6552,
+         0.2603,
+         0.6449,
+         0.225,
+         0.5675,
+         0.4398,
+         0.3822,
+         0.1416,
+         0.6583), method = "BH")
+                 
+              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
