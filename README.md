@@ -1,5 +1,5 @@
 # Insect_practical_code
-Code for "A single practical session improves student attitudes toward insects and promotes future entomological studies"
+Code for "From fear to fascination: A single practical session improves student attitudes toward insects, insect conservation, and future entomological studies"
 
 ## Scripts
 
